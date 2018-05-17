@@ -1,0 +1,7 @@
+language: go
+go: 1.9
+before_install: go get github.com/mattn/goveralls
+install: go get -t ./...
+script:
+  - make test
+  - $GOPATH/bin/goveralls -service=travis-ci
