@@ -6,3 +6,15 @@ builds:
       - linux
     goarch:
       - amd64
+
+brew:
+  name: nepcal
+  github:
+    owner: nepcal
+    name: nepcal
+  folder: brew
+  homepage: https://github.com/nepcal/nepcal
+  description: Equivalent of Linux's cal, for Nepali dates
+  build_dependencies:
+    - make
+
