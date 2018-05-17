@@ -54,9 +54,9 @@ const (
 	BSUBound = 2090
 )
 
-// bsMonthsInYear is a map of each BS year from BSLBound to BSUBound with a slice
+// BsDaysInMonthsByYear is a map of each BS year from BSLBound to BSUBound with a slice
 // of 12 ints indicating the number of days in each month.
-var bsDaysInMonthsByYear = map[int][]int{
+var BsDaysInMonthsByYear = map[int][]int{
 	BSLBound: []int{30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31},
 	2001:     []int{31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30},
 	2002:     []int{31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30},
@@ -179,7 +179,7 @@ func ToBS(AD Epoch) Epoch {
 	year, month, days := func() (int, int, int) {
 		for i := BSLBound; i < BSUBound; i++ {
 			for j := 0; j < 12; j++ {
-				days := bsDaysInMonthsByYear[i][j]
+				days := BsDaysInMonthsByYear[i][j]
 				if days <= totalDiff {
 					totalDiff = totalDiff - days
 					continue
