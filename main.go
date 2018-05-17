@@ -2,19 +2,25 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"os"
 	"time"
 
 	"github.com/nepcal/nepcal/internal/conversion"
 )
 
-func main() {
-	now := time.Now()
-	yy, mm, dd := now.Date()
+// Cheap testing.
+var (
+	stdout io.Writer = os.Stdout
+)
 
-	showDate(yy, int(mm), dd)
+func main() {
+	showDate(time.Now())
 }
 
-func showDate(yy, mm, dd int) {
+func showDate(t time.Time) {
+	yy, mm, dd := t.Date()
+
 	bs := conversion.ToBS(
 		conversion.Epoch{
 			Year:  yy,
@@ -23,5 +29,5 @@ func showDate(yy, mm, dd int) {
 		},
 	)
 
-	fmt.Printf("%s %d, %d\n", conversion.BSMonths[bs.Month], bs.Day, bs.Year)
+	fmt.Fprintf(stdout, "%s %d, %d\n", conversion.BSMonths[bs.Month], bs.Day, bs.Year)
 }
