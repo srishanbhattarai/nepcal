@@ -16,8 +16,7 @@ var (
 )
 
 func main() {
-	// showDate(time.Now())
-	showCal()
+	showCal(time.Now())
 }
 
 // showDate prints the current B.S. date
@@ -36,8 +35,8 @@ func showDate(t time.Time) {
 }
 
 // showCal prints the current calendar.
-func showCal() {
-	yy, mm, dd := time.Now().Date()
+func showCal(t time.Time) {
+	yy, mm, dd := t.Date()
 	w := tabwriter.NewWriter(stdout, 0, 0, 1, ' ', 0)
 
 	bs := conversion.ToBS(
