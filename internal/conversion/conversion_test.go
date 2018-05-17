@@ -41,7 +41,7 @@ func TestToBS(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			assert.Equal(t, test.output, toBS(test.input))
+			assert.Equal(t, test.output, ToBS(test.input))
 		})
 	}
 }
