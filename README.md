@@ -4,7 +4,6 @@ Print the current Nepali date in the terminal.
 
 Nepcal is a minimal version of the Linux command line tool `cal` for [Bikram Samwad](https://en.wikipedia.org/wiki/Vikram_Samvat) dates. It only implements the default command, which shows the current date, and month in a neat calendar.
 ```
-➜  nepcal git:(master) ✗ nepcal
     जेठ 3, 2075
  Su Mo Tu We Th Fr Sa
        1  2  3  4  5
@@ -13,3 +12,17 @@ Nepcal is a minimal version of the Linux command line tool `cal` for [Bikram Sam
  20 21 22 23 24 25 26
  27 28 29 30 31 32
 ```
+
+## Installation
+Pre-built binaries are available in the [Releases](https://github.com/nepcal/nepcal/releases) page.
+
+You can also install `nepcal` manually if you have Go installed
+```
+go get -v github.com/nepcal/nepcal
+```
+
+## Contributing
+Please file an issue if you have any problems with `nepcal` or, have a look at the issues page for contributing on existing issues. Also, read the [code of conduct](https://github.com/nepcal/nepcal/blob/master/CODE_OF_CONDUCT.md)
+
+## License
+MIT
