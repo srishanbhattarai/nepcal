@@ -1,0 +1,18 @@
+clone_folder: c:\gopath\src\github.com\nepcal\nepcal
+
+environment:
+  GOPATH: c:\gopath
+
+install:
+  - echo %PATH%
+  - echo %GOPATH%
+  - set PATH=%GOPATH%\bin;c:\go\bin;%PATH%
+  - go version
+  - go env
+  - go get -t -v ./...
+
+build_script:
+  - go build .
+
+test_script:
+  - go test -v ./...
