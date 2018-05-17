@@ -16,3 +16,4 @@ vendor/
 
 # Binaries
 bin/
+dist/
