@@ -9,33 +9,33 @@ import (
 func TestToBS(t *testing.T) {
 	tests := []struct {
 		name   string
-		input  epoch
-		output epoch
+		input  Epoch
+		output Epoch
 	}{
 		{
 			"case1",
-			epoch{2018, 04, 01},
-			epoch{2074, 12, 18},
+			Epoch{2018, 04, 01},
+			Epoch{2074, 12, 18},
 		},
 		{
 			"case2",
-			epoch{1943, 04, 15},
-			epoch{2000, 01, 02},
+			Epoch{1943, 04, 15},
+			Epoch{2000, 01, 02},
 		},
 		{
 			"case3",
-			epoch{2018, 04, 17},
-			epoch{2075, 01, 04},
+			Epoch{2018, 04, 17},
+			Epoch{2075, 01, 04},
 		},
 		{
 			"case4",
-			epoch{2018, 05, 01},
-			epoch{2075, 01, 18},
+			Epoch{2018, 05, 01},
+			Epoch{2075, 01, 18},
 		},
 		{
 			"case5",
-			epoch{1960, 9, 16},
-			epoch{2017, 06, 1},
+			Epoch{1960, 9, 16},
+			Epoch{2017, 06, 1},
 		},
 	}
 

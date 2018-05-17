@@ -4,10 +4,11 @@ import (
 	"time"
 )
 
-type epoch struct {
-	year  int
-	month int
-	day   int
+// Epoch represents a single date irrespective of AD or BS.
+type Epoch struct {
+	Year  int
+	Month int
+	Day   int
 }
 
 // The list of months in the B.S. system.
@@ -163,11 +164,11 @@ func adDaysInMonths(isLeapYear bool) []int {
 	return normalData
 }
 
-// toBS handles conversion of an Anno Domini (A.D) date into the Nepali
+// ToBS handles conversion of an Anno Domini (A.D) date into the Nepali
 // date format - Bikram Samwad (B.S).The approximate difference is
 // 56 years, 8 months.
-func toBS(AD epoch) epoch {
-	adLBound := dateFromEpoch(epoch{ADLBoundY, ADLBoundM, ADLBoundD})
+func ToBS(AD Epoch) Epoch {
+	adLBound := dateFromEpoch(Epoch{ADLBoundY, ADLBoundM, ADLBoundD})
 	adDate := dateFromEpoch(AD)
 	if !adDate.After(adLBound) {
 		panic("Can only work with dates after 1943 April 14.")
@@ -191,13 +192,15 @@ func toBS(AD epoch) epoch {
 		return -1, -1, -1
 	}()
 
-	return epoch{year, month, days}
+	return Epoch{year, month, days}
 }
 
-func dateFromEpoch(e epoch) time.Time {
-	return time.Date(e.year, time.Month(e.month), e.day, 0, 0, 0, 0, time.UTC)
+// dateFromEpoch creates a time.Time type from an Epoch
+func dateFromEpoch(e Epoch) time.Time {
+	return time.Date(e.Year, time.Month(e.Month), e.Day, 0, 0, 0, 0, time.UTC)
 }
 
+// isLeapYear returns if the passed in year is a leap year.
 func isLeapYear(year int) bool {
 	if year%4 != 0 {
 		return false
