@@ -13,6 +13,14 @@ Nepcal is a minimal version of the Linux command line tool `cal` for [Vikram Sam
  27 28 29 30 31 32
 ```
 
+## Usage
+Run `nepcal` on your terminal to see today's date and calendar for the month. For viewing only the date,
+use the `-d` flag as follows
+
+```
+$ nepcal -d
+```
+
 ## Installation
 Pre-built binaries are available in the [Releases](https://github.com/nepcal/nepcal/releases) page.
 
