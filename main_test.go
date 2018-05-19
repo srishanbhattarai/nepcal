@@ -8,6 +8,21 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestRender(t *testing.T) {
+	dateBuf := bytes.NewBuffer([]byte(""))
+	calBuf := bytes.NewBuffer([]byte(""))
+
+	writer = dateBuf
+	render(true)
+
+	writer = calBuf
+	render(false)
+
+	if len(dateBuf.String()) > len(calBuf.String()) {
+		t.Fatalf("Expected dateBuf to have a lower length than calBuf")
+	}
+}
+
 func TestShowDate(t *testing.T) {
 	b := bytes.NewBuffer([]byte(""))
 

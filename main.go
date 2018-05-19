@@ -10,14 +10,28 @@ import (
 	"github.com/nepcal/nepcal/internal/conversion"
 )
 
-func main() {
-	dateFlag := flag.Bool("d", false, "Print only the date")
-	flag.Parse()
+// Cheap testing.
+var writer io.Writer = os.Stdout
 
-	if *dateFlag {
-		showDate(os.Stdout, time.Now())
+// Flag list
+var (
+	dateFlag = flag.Bool("d", false, "Print only the date")
+)
+
+func init() {
+	flag.Parse()
+}
+
+func main() {
+	render(*dateFlag)
+}
+
+// Render decides what to show based on the flags.
+func render(dateFlag bool) {
+	if dateFlag {
+		showDate(writer, time.Now())
 	} else {
-		renderCalendar(os.Stdout, time.Now())
+		renderCalendar(writer, time.Now())
 	}
 }
 

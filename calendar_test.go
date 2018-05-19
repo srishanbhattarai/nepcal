@@ -88,7 +88,7 @@ func TestRenderCalendar(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		b := bytes.NewBuffer([]byte("k ho"))
+		b := bytes.NewBuffer([]byte(""))
 
 		t.Run(test.name, func(t *testing.T) {
 			b.Reset()
