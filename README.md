@@ -1,5 +1,4 @@
-# nepcal &middot; [![Build Status](https://travis-ci.org/nepcal/nepcal.svg?branch=master)](https://travis-ci.org/nepcal/nepcal) [![Build status](https://ci.appveyor.com/api/projects/status/2kg411mphyaor4ki?svg=true)](https://ci.appveyor.com/api/projects/status/2kg411mphyaor4ki?svg=true) [![Coverage Status](https://coveralls.io/repos/github/nepcal/nepcal/badge.svg?branch=master&service=github)](https://coveralls.io/github/nepcal/nepcal?branch=master)
-
+# nepcal &middot; [![Build Status](https://travis-ci.org/nepcal/nepcal.svg?branch=master)](https://travis-ci.org/nepcal/nepcal) [![Build status](https://ci.appveyor.com/api/projects/status/2kg411mphyaor4ki?svg=true)](https://ci.appveyor.com/api/projects/status/2kg411mphyaor4ki?svg=true) [![Coverage Status](https://coveralls.io/repos/github/nepcal/nepcal/badge.svg?branch=master)](https://coveralls.io/github/nepcal/nepcal?branch=master)
 Print the current Nepali date in the terminal.
 
 Nepcal is a minimal version of the Linux command line tool `cal` for [Vikram Samvat](https://en.wikipedia.org/wiki/Vikram_Samvat) dates. It only implements the default command, which shows the current date, and month in a neat calendar.
