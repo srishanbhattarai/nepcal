@@ -37,6 +37,11 @@ func TestToBS(t *testing.T) {
 			Epoch{1960, 9, 16},
 			Epoch{2017, 06, 1},
 		},
+		{
+			"case6",
+			Epoch{2037, 9, 16},
+			Epoch{-1, -1, -1},
+		},
 	}
 
 	for _, test := range tests {
@@ -44,6 +49,12 @@ func TestToBS(t *testing.T) {
 			assert.Equal(t, test.output, ToBS(test.input))
 		})
 	}
+
+	t.Run("panics if date is before 1943 April 14", func(t *testing.T) {
+		assert.Panics(t, func() {
+			ToBS(Epoch{1943, 04, 01}) // april 1
+		}, "Can only work with dates after 1943 April 14")
+	})
 }
 
 func TestIsLeapYear(t *testing.T) {
