@@ -9,22 +9,30 @@ import (
 	"github.com/nepcal/nepcal/internal/conversion"
 )
 
-// val keeps track of where we are when printing the calendar.
-var val = 1
+// calendar struct represents the state required to render
+// the B.S. calendar
+type calendar struct {
+	val int
+}
 
-// renderCalendar prints the BS calendar for the given time.Time.
+// newCalendar returns a new instance of calendar with the initial value of 1.
+func newCalendar() *calendar {
+	return &calendar{1}
+}
+
+// Render prints the BS calendar for the given time.Time.
 // For printing formatted/aligned output, we use a tabwriter from the
 // standard library. It doesn't support ANSI escapes so we cant have
 // color/other enhancements to the output.(https://github.com/nepcal/nepcal/issues/4)
-func renderCalendar(parentWriter io.Writer, t time.Time) {
+func (c *calendar) Render(parentWriter io.Writer, t time.Time) {
 	w := tabwriter.NewWriter(parentWriter, 0, 0, 1, ' ', 0)
 	ad := toEpoch(t)
 	bs := conversion.ToBS(ad)
 
-	renderBSDateHeader(w, bs)
-	renderStaticDaysHeader(w)
-	renderFirstRow(w, ad, bs)
-	renderCalWithoutFirstRow(w, ad, bs)
+	c.renderBSDateHeader(w, bs)
+	c.renderStaticDaysHeader(w)
+	c.renderFirstRow(w, ad, bs)
+	c.renderCalWithoutFirstRow(w, ad, bs)
 
 	w.Flush()
 }
@@ -33,15 +41,15 @@ func renderCalendar(parentWriter io.Writer, t time.Time) {
 // to be handled separately is because there is a skew in each month which
 // determines which day the month starts from - we need to tab space the 'skew' number
 // of days, then start printing from the day after the skew.
-func renderFirstRow(w io.Writer, ad, bs conversion.Epoch) {
-	offset := calculateSkew(ad, bs)
+func (c *calendar) renderFirstRow(w io.Writer, ad, bs conversion.Epoch) {
+	offset := c.calculateSkew(ad, bs)
 	for i := 0; i < offset; i++ {
 		fmt.Fprintf(w, "\t")
 	}
 
 	for i := 0; i < (7 - offset); i++ {
-		fmt.Fprintf(w, "\t%d", val)
-		val++
+		fmt.Fprintf(w, "\t%d", c.val)
+		c.val++
 	}
 
 	fmt.Fprint(w, "\n")
@@ -50,20 +58,20 @@ func renderFirstRow(w io.Writer, ad, bs conversion.Epoch) {
 // renderCalWithoutFirstRow renders the rest of the calendar without the first row.
 // renderFirstRow will handle that due to special circumstances. We basically loop over
 // each row and print 7 numbers until we are at the end of the month.
-func renderCalWithoutFirstRow(w io.Writer, ad, bs conversion.Epoch) {
+func (c *calendar) renderCalWithoutFirstRow(w io.Writer, ad, bs conversion.Epoch) {
 	daysInMonth := conversion.BsDaysInMonthsByYear[bs.Year][bs.Month-1]
 
-	for val < daysInMonth {
-		start := daysInMonth - val
+	for c.val < daysInMonth {
+		start := daysInMonth - c.val
 		end := start + 7
 
 		for i := start; i < end; i++ {
-			if val > daysInMonth {
+			if c.val > daysInMonth {
 				break
 			}
 
-			fmt.Fprintf(w, "\t%d", val)
-			val++
+			fmt.Fprintf(w, "\t%d", c.val)
+			c.val++
 		}
 
 		fmt.Fprint(w, "\n")
@@ -71,7 +79,7 @@ func renderCalWithoutFirstRow(w io.Writer, ad, bs conversion.Epoch) {
 }
 
 // renderStaticDaysHeader prints the static list of days for the calendar
-func renderStaticDaysHeader(w io.Writer) {
+func (c *calendar) renderStaticDaysHeader(w io.Writer) {
 	for _, v := range []string{"Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"} {
 		fmt.Fprintf(w, "%s\t", v)
 	}
@@ -80,7 +88,7 @@ func renderStaticDaysHeader(w io.Writer) {
 }
 
 // renderBSDateHeader prints the date corresponding to the epoch.
-func renderBSDateHeader(w io.Writer, e conversion.Epoch) {
+func (c *calendar) renderBSDateHeader(w io.Writer, e conversion.Epoch) {
 	fmt.Fprintf(w, "\t\t%s %d, %d\n\t", conversion.BSMonths[e.Month], e.Day, e.Year)
 }
 
@@ -88,7 +96,7 @@ func renderBSDateHeader(w io.Writer, e conversion.Epoch) {
 // BS date, we calculate the diff in days from the BS date to the start of the month in BS.
 // We subtract that from the AD date, and get the weekday.
 // For example, a skew of 2 means the month starts from Tuesday.
-func calculateSkew(ad, bs conversion.Epoch) int {
+func (c *calendar) calculateSkew(ad, bs conversion.Epoch) int {
 	adDate := fromEpoch(ad)
 	dayDiff := (bs.Day % 7) - 1
 	adWithoutbsDiffDays := adDate.AddDate(0, 0, -dayDiff)

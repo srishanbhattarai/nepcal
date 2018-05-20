@@ -31,7 +31,8 @@ func render(dateFlag bool) {
 	if dateFlag {
 		showDate(writer, time.Now())
 	} else {
-		renderCalendar(writer, time.Now())
+		cal := newCalendar()
+		cal.Render(writer, time.Now())
 	}
 }
 

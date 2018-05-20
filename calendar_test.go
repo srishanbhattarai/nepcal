@@ -53,7 +53,8 @@ func TestCalculateSkew(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			assert.Equal(t, test.expected, calculateSkew(test.adDate, test.bsDate))
+			c := newCalendar()
+			assert.Equal(t, test.expected, c.calculateSkew(test.adDate, test.bsDate))
 		})
 	}
 }
@@ -92,7 +93,8 @@ func TestRenderCalendar(t *testing.T) {
 
 		t.Run(test.name, func(t *testing.T) {
 			b.Reset()
-			renderCalendar(b, test.t)
+			c := newCalendar()
+			c.Render(b, test.t)
 			assert.Equal(t, clean(test.expected), clean(b.String()))
 		})
 	}
