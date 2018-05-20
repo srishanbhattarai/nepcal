@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/nepcal/nepcal/internal/dateconv"
+	"github.com/srishanbhattarai/nepcal/internal/dateconv"
 )
 
 // Cheap testing.

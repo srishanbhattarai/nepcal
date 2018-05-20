@@ -6,7 +6,7 @@ import (
 	"text/tabwriter"
 	"time"
 
-	"github.com/nepcal/nepcal/internal/dateconv"
+	"github.com/srishanbhattarai/nepcal/internal/dateconv"
 )
 
 // calendar struct represents the state required to render
