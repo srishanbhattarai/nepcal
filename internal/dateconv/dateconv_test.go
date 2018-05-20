@@ -1,4 +1,4 @@
-package conversion
+package dateconv
 
 import (
 	"testing"

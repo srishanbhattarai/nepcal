@@ -6,7 +6,7 @@ import (
 	"text/tabwriter"
 	"time"
 
-	"github.com/nepcal/nepcal/internal/conversion"
+	"github.com/nepcal/nepcal/internal/dateconv"
 )
 
 // calendar struct represents the state required to render
@@ -27,7 +27,7 @@ func newCalendar() *calendar {
 func (c *calendar) Render(parentWriter io.Writer, t time.Time) {
 	w := tabwriter.NewWriter(parentWriter, 0, 0, 1, ' ', 0)
 	ad := toEpoch(t)
-	bs := conversion.ToBS(ad)
+	bs := dateconv.ToBS(ad)
 
 	c.renderBSDateHeader(w, bs)
 	c.renderStaticDaysHeader(w)
@@ -41,7 +41,7 @@ func (c *calendar) Render(parentWriter io.Writer, t time.Time) {
 // to be handled separately is because there is a skew in each month which
 // determines which day the month starts from - we need to tab space the 'skew' number
 // of days, then start printing from the day after the skew.
-func (c *calendar) renderFirstRow(w io.Writer, ad, bs conversion.Epoch) {
+func (c *calendar) renderFirstRow(w io.Writer, ad, bs dateconv.Epoch) {
 	offset := c.calculateSkew(ad, bs)
 	for i := 0; i < offset; i++ {
 		fmt.Fprintf(w, "\t")
@@ -58,8 +58,8 @@ func (c *calendar) renderFirstRow(w io.Writer, ad, bs conversion.Epoch) {
 // renderCalWithoutFirstRow renders the rest of the calendar without the first row.
 // renderFirstRow will handle that due to special circumstances. We basically loop over
 // each row and print 7 numbers until we are at the end of the month.
-func (c *calendar) renderCalWithoutFirstRow(w io.Writer, ad, bs conversion.Epoch) {
-	daysInMonth := conversion.BsDaysInMonthsByYear[bs.Year][bs.Month-1]
+func (c *calendar) renderCalWithoutFirstRow(w io.Writer, ad, bs dateconv.Epoch) {
+	daysInMonth := dateconv.BsDaysInMonthsByYear[bs.Year][bs.Month-1]
 
 	for c.val < daysInMonth {
 		start := daysInMonth - c.val
@@ -88,15 +88,15 @@ func (c *calendar) renderStaticDaysHeader(w io.Writer) {
 }
 
 // renderBSDateHeader prints the date corresponding to the epoch.
-func (c *calendar) renderBSDateHeader(w io.Writer, e conversion.Epoch) {
-	fmt.Fprintf(w, "\t\t%s %d, %d\n\t", conversion.BSMonths[e.Month], e.Day, e.Year)
+func (c *calendar) renderBSDateHeader(w io.Writer, e dateconv.Epoch) {
+	fmt.Fprintf(w, "\t\t%s %d, %d\n\t", dateconv.BSMonths[e.Month], e.Day, e.Year)
 }
 
 // calculateSkew calculates the offset at the beginning of the month. Given an AD and
 // BS date, we calculate the diff in days from the BS date to the start of the month in BS.
 // We subtract that from the AD date, and get the weekday.
 // For example, a skew of 2 means the month starts from Tuesday.
-func (c *calendar) calculateSkew(ad, bs conversion.Epoch) int {
+func (c *calendar) calculateSkew(ad, bs dateconv.Epoch) int {
 	adDate := fromEpoch(ad)
 	dayDiff := (bs.Day % 7) - 1
 	adWithoutbsDiffDays := adDate.AddDate(0, 0, -dayDiff)
@@ -108,15 +108,15 @@ func (c *calendar) calculateSkew(ad, bs conversion.Epoch) int {
 }
 
 // fromEpoch creates a time.Time type from an Epoch
-func fromEpoch(e conversion.Epoch) time.Time {
+func fromEpoch(e dateconv.Epoch) time.Time {
 	return time.Date(e.Year, time.Month(e.Month), e.Day, 0, 0, 0, 0, time.UTC)
 }
 
-// toEpoch creates a conversion.Epoch from a time.Time
-func toEpoch(t time.Time) conversion.Epoch {
+// toEpoch creates a dateconv.Epoch from a time.Time
+func toEpoch(t time.Time) dateconv.Epoch {
 	yy, mm, dd := t.Date()
 
-	return conversion.Epoch{
+	return dateconv.Epoch{
 		Year:  yy,
 		Month: int(mm),
 		Day:   dd,

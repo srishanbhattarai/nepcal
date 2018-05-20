@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/nepcal/nepcal/internal/conversion"
+	"github.com/nepcal/nepcal/internal/dateconv"
 )
 
 // Cheap testing.
@@ -40,13 +40,13 @@ func render(dateFlag bool) {
 func showDate(w io.Writer, t time.Time) {
 	yy, mm, dd := t.Date()
 
-	bs := conversion.ToBS(
-		conversion.Epoch{
+	bs := dateconv.ToBS(
+		dateconv.Epoch{
 			Year:  yy,
 			Month: int(mm),
 			Day:   dd,
 		},
 	)
 
-	fmt.Fprintf(w, "%s %d, %d\n", conversion.BSMonths[bs.Month], bs.Day, bs.Year)
+	fmt.Fprintf(w, "%s %d, %d\n", dateconv.BSMonths[bs.Month], bs.Day, bs.Year)
 }

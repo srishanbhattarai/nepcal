@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/nepcal/nepcal/internal/conversion"
+	"github.com/nepcal/nepcal/internal/dateconv"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -21,32 +21,32 @@ var fixtures = map[string]time.Time{
 func TestCalculateSkew(t *testing.T) {
 	tests := []struct {
 		name     string
-		adDate   conversion.Epoch
-		bsDate   conversion.Epoch
+		adDate   dateconv.Epoch
+		bsDate   dateconv.Epoch
 		expected int
 	}{
 		{
 			"less than 7",
 			toEpoch(fixtures["May17"]),
-			conversion.ToBS(toEpoch(fixtures["May17"])),
+			dateconv.ToBS(toEpoch(fixtures["May17"])),
 			2,
 		},
 		{
 			"less than 7",
 			toEpoch(fixtures["May19"]),
-			conversion.ToBS(toEpoch(fixtures["May19"])),
+			dateconv.ToBS(toEpoch(fixtures["May19"])),
 			2,
 		},
 		{
 			"less than 7",
 			toEpoch(fixtures["June15"]),
-			conversion.ToBS(toEpoch(fixtures["June15"])),
+			dateconv.ToBS(toEpoch(fixtures["June15"])),
 			5,
 		},
 		{
 			"more than 7",
 			toEpoch(fixtures["May26"]),
-			conversion.ToBS(toEpoch(fixtures["May26"])),
+			dateconv.ToBS(toEpoch(fixtures["May26"])),
 			2,
 		},
 	}

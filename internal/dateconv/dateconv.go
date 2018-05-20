@@ -1,4 +1,6 @@
-package conversion
+// Package dateconv deals with conversion of A.D. dates to B.S dates
+// In either format, the date is represented by an Epoch struct.
+package dateconv
 
 import (
 	"time"
