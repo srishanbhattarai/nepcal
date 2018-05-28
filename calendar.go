@@ -23,7 +23,7 @@ func newCalendar() *calendar {
 // Render prints the BS calendar for the given time.Time.
 // For printing formatted/aligned output, we use a tabwriter from the
 // standard library. It doesn't support ANSI escapes so we cant have
-// color/other enhancements to the output.(https://github.com/nepcal/nepcal/issues/4)
+// color/other enhancements to the output.(https://github.com/srishanbhattarai/nepcal/issues/4)
 func (c *calendar) Render(parentWriter io.Writer, ad time.Time) {
 	w := tabwriter.NewWriter(parentWriter, 0, 0, 1, ' ', 0)
 	bs := dateconv.ToBS(ad)
