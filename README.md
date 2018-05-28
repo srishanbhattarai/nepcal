@@ -21,15 +21,15 @@ $ nepcal -d
 ```
 
 ## Installation
-Pre-built binaries are available in the [Releases](https://github.com/nepcal/nepcal/releases) page.
+Pre-built binaries are available in the [Releases](https://github.com/srishanbhattarai/nepcal/releases) page.
 
 You can also install `nepcal` manually if you have Go installed
 ```
-go get -v github.com/nepcal/nepcal
+go get -v github.com/srishanbhattarai/nepcal
 ```
 
 ## Contributing
-Please file an issue if you have any problems with `nepcal` or, have a look at the issues page for contributing on existing issues. Also, read the [code of conduct](https://github.com/nepcal/nepcal/blob/master/CODE_OF_CONDUCT.md).
+Please file an issue if you have any problems with `nepcal` or, have a look at the issues page for contributing on existing issues. Also, read the [code of conduct](https://github.com/srishanbhattarai/nepcal/blob/master/CODE_OF_CONDUCT.md).
 
 ## License
 MIT
