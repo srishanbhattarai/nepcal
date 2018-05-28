@@ -1,4 +1,5 @@
-// Package dateconv deals with conversion of A.D. dates to B.S dates
+// Package dateconv deals with conversion of A.D. dates to B.S dates as well as
+// some utilities to get B.S. month names and day counts for a month.
 package dateconv
 
 import (
@@ -7,51 +8,51 @@ import (
 
 // The list of months in the B.S. system.
 const (
-	BAISAKH = iota + 1
-	JESTHA
-	ASHAR
-	SHRAWAN
-	BHADRA
-	ASHOJ
-	KARTIK
-	MANGSHIR
-	POUSH
-	MAGH
-	FALGUN
-	CHAITRA
+	baisakh = iota + 1
+	jestha
+	ashar
+	shrawan
+	bhadra
+	ashoj
+	kartik
+	mangshir
+	poush
+	magh
+	falgun
+	chaitra
 )
 
-// BSMonths is a map to get each month's name in the Nepali language.
-var BSMonths = map[int]string{
-	BAISAKH:  "बैशाख",
-	JESTHA:   "जेठ",
-	ASHAR:    "असार",
-	SHRAWAN:  "सावन",
-	BHADRA:   "भदौ",
-	ASHOJ:    "असोज",
-	KARTIK:   "कार्तिक",
-	MANGSHIR: "मंसिर",
-	POUSH:    "पौष",
-	MAGH:     "माघ",
-	FALGUN:   "फागुन",
-	CHAITRA:  "चैत",
+// bsMonths is a map to get each month's name in the Nepali language.
+var bsMonths = map[int]string{
+	baisakh:  "बैशाख",
+	jestha:   "जेठ",
+	ashar:    "असार",
+	shrawan:  "सावन",
+	bhadra:   "भदौ",
+	ashoj:    "असोज",
+	kartik:   "कार्तिक",
+	mangshir: "मंसिर",
+	poush:    "पौष",
+	magh:     "माघ",
+	falgun:   "फागुन",
+	chaitra:  "चैत",
 }
 
 // Lower and Upper bounds for AD and BS years along with diffs for
 // month and days
 const (
-	ADLBoundY = 1943
-	ADLBoundM = int(time.April)
-	ADLBoundD = 14
+	adLBoundY = 1943
+	adLBoundM = int(time.April)
+	adLBoundD = 14
 
-	BSLBound = 2000
-	BSUBound = 2090
+	bsLBound = 2000
+	bsUBound = 2090
 )
 
-// BsDaysInMonthsByYear is a map of each BS year from BSLBound to BSUBound with a slice
+// bsDaysInMonthsByYear is a map of each BS year from BSLBound to BSUBound with a slice
 // of 12 ints indicating the number of days in each month.
-var BsDaysInMonthsByYear = map[int][]int{
-	BSLBound: []int{30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31},
+var bsDaysInMonthsByYear = map[int][]int{
+	bsLBound: []int{30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31},
 	2001:     []int{31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30},
 	2002:     []int{31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30},
 	2003:     []int{31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31},
@@ -141,28 +142,14 @@ var BsDaysInMonthsByYear = map[int][]int{
 	2087:     []int{31, 31, 32, 31, 31, 31, 30, 30, 29, 30, 30, 30},
 	2088:     []int{30, 31, 32, 32, 30, 31, 30, 30, 29, 30, 30, 30},
 	2089:     []int{30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 30, 30},
-	BSUBound: []int{30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 30, 30},
-}
-
-// adDaysInMonths is the number of days in each month in a year which is only dependent on
-// the leap year status. This function is the equivalent of the bsDaysInMonthsByYear map for
-// AD dates.
-func adDaysInMonths(isLeapYear bool) []int {
-	normalData := []int{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
-	leapData := []int{31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
-
-	if isLeapYear {
-		return leapData
-	}
-
-	return normalData
+	bsUBound: []int{30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 30, 30},
 }
 
 // ToBS handles conversion of an Anno Domini (A.D) date into the Nepali
 // date format - Bikram Samwad (B.S).The approximate difference is
 // 56 years, 8 months.
 func ToBS(adDate time.Time) time.Time {
-	adLBound := toTime(ADLBoundY, ADLBoundM, ADLBoundD)
+	adLBound := toTime(adLBoundY, adLBoundM, adLBoundD)
 	if !adDate.After(adLBound) {
 		panic("Can only work with dates after 1943 April 14.")
 	}
@@ -170,9 +157,9 @@ func ToBS(adDate time.Time) time.Time {
 
 	// Redistribute the diff along the BS data grid
 	year, month, days := func() (int, int, int) {
-		for i := BSLBound; i < BSUBound; i++ {
+		for i := bsLBound; i < bsUBound; i++ {
 			for j := 0; j < 12; j++ {
-				days := BsDaysInMonthsByYear[i][j]
+				days := bsDaysInMonthsByYear[i][j]
 				if days <= totalDiff {
 					totalDiff = totalDiff - days
 					continue
@@ -186,6 +173,34 @@ func ToBS(adDate time.Time) time.Time {
 	}()
 
 	return toTime(year, month, days)
+}
+
+// GetBSMonthName returns the B.S. month name from the time.Month type.
+// Example: GetBSMonthName(1) === बैशाख
+func GetBSMonthName(bsMonth time.Month) (string, bool) {
+	mth, ok := bsMonths[int(bsMonth)]
+
+	return mth, ok
+}
+
+// BsDaysInMonthsByYear returns the number of days in the month 'mm'
+// in the year 'yy'. Note that it is assumed that months start from 1
+// the caller does not have to subtract by one when calling the function.
+// yy must be between 2000 and 2090
+// mm must be between 1 and 12.
+func BsDaysInMonthsByYear(yy int, mm time.Month) (int, bool) {
+	months, ok := bsDaysInMonthsByYear[yy]
+	if !ok {
+		return 0, ok
+	}
+
+	query := int(mm) - 1
+
+	if query > 11 || query < 0 {
+		return 0, false
+	}
+
+	return months[query], true
 }
 
 // toTime creates a new time.Time with the basic yy/mm/dd parameters.
@@ -204,4 +219,18 @@ func isLeapYear(year int) bool {
 	}
 
 	return false
+}
+
+// adDaysInMonths is the number of days in each month in a year which is only dependent on
+// the leap year status. This function is the equivalent of the bsDaysInMonthsByYear map for
+// AD dates.
+func adDaysInMonths(isLeapYear bool) []int {
+	normalData := []int{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
+	leapData := []int{31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
+
+	if isLeapYear {
+		return leapData
+	}
+
+	return normalData
 }

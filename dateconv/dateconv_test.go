@@ -108,3 +108,49 @@ func TestAdDaysInMonths(t *testing.T) {
 		})
 	}
 }
+
+func TestGetBSMonthName(t *testing.T) {
+	tests := []struct {
+		name         string
+		month        time.Month
+		expectedStr  string
+		expectedBool bool
+	}{
+		{"when in range", time.Month(1), "बैशाख", true},
+		{"when not in range", time.Month(100), "", false},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			mth, ok := GetBSMonthName(test.month)
+
+			assert.Equal(t, test.expectedStr, mth)
+			assert.Equal(t, test.expectedBool, ok)
+		})
+	}
+}
+
+func TestBsDaysInMonthsByYear(t *testing.T) {
+	tests := []struct {
+		name         string
+		year         int
+		month        time.Month
+		expected     int
+		expectedBool bool
+	}{
+		{"when in range", bsLBound, time.Month(1), 30, true},
+		{"when year not in range", bsUBound + 1, time.Month(1), 0, false},
+		{"when year not in range", bsLBound - 1, time.Month(1), 0, false},
+		{"when query month exceeds 12", bsUBound, time.Month(13), 0, false},
+		{"when query month is less than 1", bsUBound, time.Month(-1), 0, false},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			days, ok := BsDaysInMonthsByYear(test.year, test.month)
+
+			assert.Equal(t, test.expected, days)
+			assert.Equal(t, test.expectedBool, ok)
+		})
+	}
+}

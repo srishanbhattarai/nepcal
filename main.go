@@ -55,7 +55,9 @@ func showDate(w io.Writer, t time.Time) {
 
 	bsyy, bsmm, bsdd := dateconv.ToBS(toTime(yy, mm, dd)).Date()
 
-	fmt.Fprintf(w, "%s %d, %d\n", dateconv.BSMonths[int(bsmm)], bsdd, bsyy)
+	if month, ok := dateconv.GetBSMonthName(bsmm); ok {
+		fmt.Fprintf(w, "%s %d, %d\n", month, bsdd, bsyy)
+	}
 }
 
 // toTime creates a new time.Time with the basic yy/mm/dd parameters.
