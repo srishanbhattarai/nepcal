@@ -2,6 +2,7 @@ package dateconv
 
 import (
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -9,38 +10,38 @@ import (
 func TestToBS(t *testing.T) {
 	tests := []struct {
 		name   string
-		input  Epoch
-		output Epoch
+		input  time.Time
+		output time.Time
 	}{
 		{
 			"case1",
-			Epoch{2018, 04, 01},
-			Epoch{2074, 12, 18},
+			toTime(2018, 04, 01),
+			toTime(2074, 12, 18),
 		},
 		{
 			"case2",
-			Epoch{1943, 04, 15},
-			Epoch{2000, 01, 02},
+			toTime(1943, 04, 15),
+			toTime(2000, 01, 02),
 		},
 		{
 			"case3",
-			Epoch{2018, 04, 17},
-			Epoch{2075, 01, 04},
+			toTime(2018, 04, 17),
+			toTime(2075, 01, 04),
 		},
 		{
 			"case4",
-			Epoch{2018, 05, 01},
-			Epoch{2075, 01, 18},
+			toTime(2018, 05, 01),
+			toTime(2075, 01, 18),
 		},
 		{
 			"case5",
-			Epoch{1960, 9, 16},
-			Epoch{2017, 06, 1},
+			toTime(1960, 9, 16),
+			toTime(2017, 06, 1),
 		},
 		{
 			"case6",
-			Epoch{2037, 9, 16},
-			Epoch{-1, -1, -1},
+			toTime(2037, 9, 16),
+			toTime(-1, -1, -1),
 		},
 	}
 
@@ -52,7 +53,7 @@ func TestToBS(t *testing.T) {
 
 	t.Run("panics if date is before 1943 April 14", func(t *testing.T) {
 		assert.Panics(t, func() {
-			ToBS(Epoch{1943, 04, 01}) // april 1
+			ToBS(toTime(1943, 04, 01)) // april 1
 		}, "Can only work with dates after 1943 April 14")
 	})
 }

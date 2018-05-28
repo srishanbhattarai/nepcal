@@ -1,4 +1,4 @@
-clone_folder: c:\gopath\src\github.com\nepcal\nepcal
+clone_folder: c:\gopath\src\github.com\srishanbhattarai\nepcal
 
 environment:
   GOPATH: c:\gopath

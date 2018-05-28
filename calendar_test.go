@@ -21,32 +21,32 @@ var fixtures = map[string]time.Time{
 func TestCalculateSkew(t *testing.T) {
 	tests := []struct {
 		name     string
-		adDate   dateconv.Epoch
-		bsDate   dateconv.Epoch
+		adDate   time.Time
+		bsDate   time.Time
 		expected int
 	}{
 		{
 			"less than 7",
-			toEpoch(fixtures["May17"]),
-			dateconv.ToBS(toEpoch(fixtures["May17"])),
+			fixtures["May17"],
+			dateconv.ToBS(fixtures["May17"]),
 			2,
 		},
 		{
 			"less than 7",
-			toEpoch(fixtures["May19"]),
-			dateconv.ToBS(toEpoch(fixtures["May19"])),
+			fixtures["May19"],
+			dateconv.ToBS(fixtures["May19"]),
 			2,
 		},
 		{
 			"less than 7",
-			toEpoch(fixtures["June15"]),
-			dateconv.ToBS(toEpoch(fixtures["June15"])),
+			fixtures["June15"],
+			dateconv.ToBS(fixtures["June15"]),
 			5,
 		},
 		{
 			"more than 7",
-			toEpoch(fixtures["May26"]),
-			dateconv.ToBS(toEpoch(fixtures["May26"])),
+			fixtures["May26"],
+			dateconv.ToBS(fixtures["May26"]),
 			2,
 		},
 	}

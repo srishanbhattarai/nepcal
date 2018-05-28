@@ -53,13 +53,12 @@ func render(dateFlag bool) {
 func showDate(w io.Writer, t time.Time) {
 	yy, mm, dd := t.Date()
 
-	bs := dateconv.ToBS(
-		dateconv.Epoch{
-			Year:  yy,
-			Month: int(mm),
-			Day:   dd,
-		},
-	)
+	bsyy, bsmm, bsdd := dateconv.ToBS(toTime(yy, mm, dd)).Date()
 
-	fmt.Fprintf(w, "%s %d, %d\n", dateconv.BSMonths[bs.Month], bs.Day, bs.Year)
+	fmt.Fprintf(w, "%s %d, %d\n", dateconv.BSMonths[int(bsmm)], bsdd, bsyy)
+}
+
+// toTime creates a new time.Time with the basic yy/mm/dd parameters.
+func toTime(yy int, mm time.Month, dd int) time.Time {
+	return time.Date(yy, mm, dd, 0, 0, 0, 0, time.UTC)
 }
