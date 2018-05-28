@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/srishanbhattarai/nepcal/dateconv"
@@ -28,12 +29,24 @@ func main() {
 
 // Render decides what to show based on the flags.
 func render(dateFlag bool) {
+	if len(os.Args) > 3 {
+		var (
+			yy, _ = strconv.Atoi(os.Args[3])
+			mm, _ = strconv.Atoi(os.Args[2])
+			dd, _ = strconv.Atoi(os.Args[1])
+		)
+
+		showDate(writer, time.Date(yy, time.Month(mm), dd, 0, 0, 0, 0, time.UTC))
+		return
+	}
+
 	if dateFlag {
 		showDate(writer, time.Now())
-	} else {
-		cal := newCalendar()
-		cal.Render(writer, time.Now())
+		return
 	}
+
+	cal := newCalendar()
+	cal.Render(writer, time.Now())
 }
 
 // showDate prints the current B.S. date
