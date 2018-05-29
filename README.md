@@ -23,13 +23,24 @@ $ nepcal -d
 ## Installation
 Pre-built binaries are available in the [Releases](https://github.com/srishanbhattarai/nepcal/releases) page.
 
+### Homebrew
+Tap the repository first.
+```
+$ brew tap srishanbhattarai/nepcal https://github.com/srishanbhattarai/nepcal
+```
+Then, run:
+```
+$ brew install nepcal
+```
+
+### Manual Installation
 You can also install `nepcal` manually if you have Go installed
 ```
-go get -v github.com/srishanbhattarai/nepcal
+$ go get -v github.com/srishanbhattarai/nepcal
 ```
 
 ## Contributing
 Please file an issue if you have any problems with `nepcal` or, have a look at the issues page for contributing on existing issues. Also, read the [code of conduct](https://github.com/srishanbhattarai/nepcal/blob/master/CODE_OF_CONDUCT.md).
 
 ## License
-MIT
+[MIT](LICENSE)
