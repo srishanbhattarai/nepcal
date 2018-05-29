@@ -7,14 +7,14 @@ builds:
     goarch:
       - amd64
 
+archive:
+  format: tar.gz
+
 brew:
   name: nepcal
   github:
-    owner: nepcal
+    owner: srishanbhattarai
     name: nepcal
   folder: Formula
   homepage: https://github.com/nepcal/nepcal
   description: Equivalent of Linux's cal, for Nepali dates
-  build_dependencies:
-    - make
-
