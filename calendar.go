@@ -48,7 +48,7 @@ func (c *calendar) renderFirstRow(w io.Writer, ad, bs time.Time) {
 
 	for i := 0; i < (7 - offset); i++ {
 		fmt.Fprintf(w, "\t%d", c.val)
-		c.val++
+		c.next()
 	}
 
 	fmt.Fprint(w, "\n")
@@ -74,7 +74,7 @@ func (c *calendar) renderCalWithoutFirstRow(w io.Writer, ad, bs time.Time) {
 			}
 
 			fmt.Fprintf(w, "\t%d", c.val)
-			c.val++
+			c.next()
 		}
 
 		fmt.Fprint(w, "\n")
@@ -90,7 +90,8 @@ func (c *calendar) renderStaticDaysHeader(w io.Writer) {
 	fmt.Fprint(w, "\n")
 }
 
-// renderBSDateHeader prints the date corresponding to the epoch.
+// renderBSDateHeader prints the date corresponding to the time e. This will
+// be the header of the calendar.
 func (c *calendar) renderBSDateHeader(w io.Writer, e time.Time) {
 	yy, mm, dd := e.Date()
 
@@ -113,4 +114,9 @@ func (c *calendar) calculateSkew(ad, bs time.Time) int {
 	// Since time.Weekday is an iota and not an iota + 1 we can avoid
 	// subtracting 1 from the return value.
 	return int(d)
+}
+
+// next increments the value counter.
+func (c *calendar) next() {
+	c.val++
 }
