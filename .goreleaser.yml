@@ -12,7 +12,7 @@ brew:
   github:
     owner: nepcal
     name: nepcal
-  folder: brew
+  folder: Formula
   homepage: https://github.com/nepcal/nepcal
   description: Equivalent of Linux's cal, for Nepali dates
   build_dependencies:
