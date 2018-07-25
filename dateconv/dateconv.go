@@ -44,6 +44,14 @@ func GetBSMonthName(bsMonth time.Month) (string, bool) {
 	return mth, ok
 }
 
+// GetNepWeekday returns Nepali weekday from the time.Time type.
+// Example: getNepWeekday(1) === बैशाख
+func GetNepWeekday(weekday time.Weekday) (string, bool) {
+	nepWeekday, ok := nepWeekdays[int(weekday)]
+
+	return nepWeekday, ok
+}
+
 // BsDaysInMonthsByYear returns the number of days in the month 'mm'
 // in the year 'yy'. Note that it is assumed that months start from 1
 // the caller does not have to subtract by one when calling the function.
