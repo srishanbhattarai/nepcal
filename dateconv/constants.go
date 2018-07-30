@@ -18,6 +18,17 @@ const (
 	chaitra
 )
 
+// The list of weekdays in Nepali.
+const (
+	sunday = iota
+	monday
+	tuesday
+	wednesday
+	thursday
+	friday
+	saturday
+)
+
 // bsMonths is a map to get each month's name in the Nepali language.
 var bsMonths = map[int]string{
 	baisakh:  "बैशाख",
@@ -32,6 +43,17 @@ var bsMonths = map[int]string{
 	magh:     "माघ",
 	falgun:   "फागुन",
 	chaitra:  "चैत",
+}
+
+// nepWeekdays is a map to get each weekday in Nepali language.
+var nepWeekdays = map[int]string{
+	sunday:    "आइतबार",
+	monday:    "सोमबार",
+	tuesday:   "मंगलबार",
+	wednesday: "बुधबार",
+	thursday:  "बिहिबार",
+	friday:    "शुक्रबार",
+	saturday:  "शनिबार",
 }
 
 // Lower and Upper bounds for AD and BS years along with diffs for
