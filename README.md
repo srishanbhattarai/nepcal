@@ -21,9 +21,15 @@ $ nepcal -d
 ```
 
 ## Installation
-Pre-built binaries are available in the [Releases](https://github.com/srishanbhattarai/nepcal/releases) page.
+Pre-built tarball binaries are available in the [Releases](https://github.com/srishanbhattarai/nepcal/releases) page. 
+Download and untar the binary for your platform, then move it into your `$PATH` e.g. `/usr/local/bin`.
 
-### Homebrew
+You might need to give the script execution permissions. On Linux and MacOS this would mean using `chmod` as follows:
+```
+$ chmod +x /usr/local/bin/nepcal
+```
+
+### MacOS via Homebrew
 Tap the repository first.
 ```
 $ brew tap srishanbhattarai/nepcal https://github.com/srishanbhattarai/nepcal
