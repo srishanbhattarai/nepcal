@@ -45,7 +45,7 @@ func GetBSMonthName(bsMonth time.Month) (string, bool) {
 }
 
 // GetNepWeekday returns Nepali weekday from the time.Time type.
-// Example: getNepWeekday(1) === बैशाख
+// Example: getNepWeekday(0) === आइतबार
 func GetNepWeekday(weekday time.Weekday) (string, bool) {
 	nepWeekday, ok := nepWeekdays[int(weekday)]
 

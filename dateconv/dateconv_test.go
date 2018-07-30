@@ -130,6 +130,27 @@ func TestGetBSMonthName(t *testing.T) {
 	}
 }
 
+func TestGetNepWeekday(t *testing.T) {
+	tests := []struct {
+		name         string
+		weekday      time.Weekday
+		expectedStr  string
+		expectedBool bool
+	}{
+		{"when in range", time.Weekday(0), "आइतबार", true},
+		{"when not in range", time.Weekday(7), "", false},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			mth, ok := GetNepWeekday(test.weekday)
+
+			assert.Equal(t, test.expectedStr, mth)
+			assert.Equal(t, test.expectedBool, ok)
+		})
+	}
+}
+
 func TestBsDaysInMonthsByYear(t *testing.T) {
 	tests := []struct {
 		name         string
