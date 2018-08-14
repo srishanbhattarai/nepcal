@@ -23,6 +23,10 @@ func init() {
 }
 
 func main() {
+	runCli()
+}
+
+func runCli() {
 	cli := bootstrapCli()
 
 	err := cli.Run(os.Args)
@@ -76,11 +80,11 @@ func bootstrapCli() *cli.App {
 						}()
 
 						if !areArgsValid {
-							fmt.Println("Please supply a valid date in the format mm-dd-yyyy. Example: `nepcal conv adtobs 14-08-2018`")
+							fmt.Println("Please supply a valid date in the format mm-dd-yyyy. Example: `nepcal conv adtobs 08-21-1994`")
 							return
 						}
 
-						dd, mm, yy, _ := parseRawDate(c.Args().First())
+						mm, dd, yy, _ := parseRawDate(c.Args().First())
 						showDate(writer, time.Date(yy, time.Month(mm), dd, 0, 0, 0, 0, time.UTC))
 					},
 				},
@@ -106,12 +110,12 @@ func parseRawDate(rawDate string) (int, int, int, bool) {
 		return -1, -1, -1, false
 	}
 
-	dd, err := strconv.Atoi(dateParts[0])
+	mm, err := strconv.Atoi(dateParts[0])
 	if err != nil {
 		return -1, -1, -1, false
 	}
 
-	mm, err := strconv.Atoi(dateParts[1])
+	dd, err := strconv.Atoi(dateParts[1])
 	if err != nil {
 		return -1, -1, -1, false
 	}
@@ -121,11 +125,13 @@ func parseRawDate(rawDate string) (int, int, int, bool) {
 		return -1, -1, -1, false
 	}
 
+	fmt.Println("dd, mm, yy", dd, mm, yy)
+
 	if dd < 1 || dd > 31 || mm < 1 || mm > 12 || len(dateParts[2]) != 4 {
 		return -1, -1, -1, false
 	}
 
-	return dd, mm, yy, true
+	return mm, dd, yy, true
 }
 
 // showDate prints the current B.S. date
