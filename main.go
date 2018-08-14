@@ -5,35 +5,102 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/srishanbhattarai/nepcal/dateconv"
+	"github.com/urfave/cli"
 )
+
+const versionNumber = "0.3.2"
 
 // Cheap testing.
 var writer io.Writer = os.Stdout
-
-// Flag list
-var (
-	dateFlag = flag.Bool("d", false, "Print only the date")
-)
 
 func init() {
 	flag.Parse()
 }
 
 func main() {
-	render(*dateFlag)
+	runCli()
 }
 
-// Render decides what to show based on the flags.
-func render(dateFlag bool) {
-	if dateFlag {
-		showDate(writer, time.Now())
-	} else {
-		cal := newCalendar()
-		cal.Render(writer, time.Now())
+func runCli() {
+	cli := bootstrapCli()
+
+	cli.Run(os.Args)
+}
+
+func bootstrapCli() *cli.App {
+	nc := nepcalCli{}
+
+	app := cli.NewApp()
+	app.Name = "nepcal"
+	app.Version = versionNumber
+	app.Usage = "Calendar and conversion utilities for Nepali dates"
+	app.Commands = []cli.Command{
+		{
+			Name:    "cal",
+			Aliases: []string{"c"},
+			Usage:   "Show calendar for the month",
+			Action:  nc.showCalendar,
+		},
+		{
+			Name:    "date",
+			Aliases: []string{"d"},
+			Usage:   "Show today's date",
+			Action:  nc.showDate(writer, time.Now()),
+		},
+		{
+			Name:  "conv",
+			Usage: "Convert AD dates to BS and vice-versa",
+			Subcommands: []cli.Command{
+				{
+					Name:   "adtobs",
+					Usage:  "Convert AD date to BS date",
+					Action: nc.convADToBS,
+				},
+				{
+					Name:   "bstoad",
+					Usage:  "Convert BS date to AD date",
+					Action: nc.convBSToAD,
+				},
+			},
+		},
 	}
+
+	return app
+}
+
+// Parse user input raw date into valid dd, mm, yy format. The last parameter is a boolean indicating if
+// the date is valid or not.
+func parseRawDate(rawDate string) (int, int, int, bool) {
+	dateParts := strings.Split(rawDate, "-")
+	if len(dateParts) != 3 {
+		return -1, -1, -1, false
+	}
+
+	mm, err := strconv.Atoi(dateParts[0])
+	if err != nil {
+		return -1, -1, -1, false
+	}
+
+	dd, err := strconv.Atoi(dateParts[1])
+	if err != nil {
+		return -1, -1, -1, false
+	}
+
+	yy, err := strconv.Atoi(dateParts[2])
+	if err != nil {
+		return -1, -1, -1, false
+	}
+
+	if dd < 1 || dd > 31 || mm < 1 || mm > 12 || len(dateParts[2]) != 4 {
+		return -1, -1, -1, false
+	}
+
+	return mm, dd, yy, true
 }
 
 // showDate prints the current B.S. date
@@ -41,8 +108,12 @@ func showDate(w io.Writer, t time.Time) {
 	yy, mm, dd := t.Date()
 
 	bsyy, bsmm, bsdd := dateconv.ToBS(toTime(yy, mm, dd)).Date()
+	month, monthOk := dateconv.GetBSMonthName(bsmm)
+	weekday, weekdayOk := dateconv.GetNepWeekday(t.Weekday())
 
-	fmt.Fprintf(w, "%s %d, %d\n", dateconv.BSMonths[int(bsmm)], bsdd, bsyy)
+	if monthOk && weekdayOk {
+		fmt.Fprintf(w, "%s %d, %d %s\n", month, bsdd, bsyy, weekday)
+	}
 }
 
 // toTime creates a new time.Time with the basic yy/mm/dd parameters.
