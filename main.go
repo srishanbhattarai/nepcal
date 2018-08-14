@@ -13,7 +13,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-const versionNumber = "0.3.2"
+const versionNumber = "0.4.0"
 
 // Cheap testing.
 var writer io.Writer = os.Stdout
