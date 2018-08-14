@@ -33,6 +33,8 @@ func runCli() {
 }
 
 func bootstrapCli() *cli.App {
+	nc := nepcalCli{}
+
 	app := cli.NewApp()
 	app.Name = "nepcal"
 	app.Version = versionNumber
@@ -42,55 +44,27 @@ func bootstrapCli() *cli.App {
 			Name:    "cal",
 			Aliases: []string{"c"},
 			Usage:   "Show calendar for the month",
-			Action: func(c *cli.Context) {
-				cal := newCalendar()
-				cal.Render(writer, time.Now())
-			},
+			Action:  nc.showCalendar,
 		},
 		{
 			Name:    "date",
 			Aliases: []string{"d"},
 			Usage:   "Show today's date",
-			Action: func(c *cli.Context) {
-				showDate(writer, time.Now())
-			},
+			Action:  nc.showDate(writer, time.Now()),
 		},
 		{
 			Name:  "conv",
 			Usage: "Convert AD dates to BS and vice-versa",
 			Subcommands: []cli.Command{
 				{
-					Name:  "adtobs",
-					Usage: "Convert AD date to BS date",
-					Action: func(c *cli.Context) {
-						areArgsValid := func() bool {
-							if c.NArg() < 1 {
-								return false
-							}
-
-							_, _, _, ok := parseRawDate(c.Args().First())
-							if !ok {
-								return false
-							}
-
-							return true
-						}()
-
-						if !areArgsValid {
-							fmt.Println("Please supply a valid date in the format mm-dd-yyyy. Example: `nepcal conv adtobs 08-21-1994`")
-							return
-						}
-
-						mm, dd, yy, _ := parseRawDate(c.Args().First())
-						showDate(writer, time.Date(yy, time.Month(mm), dd, 0, 0, 0, 0, time.UTC))
-					},
+					Name:   "adtobs",
+					Usage:  "Convert AD date to BS date",
+					Action: nc.convADToBS,
 				},
 				{
-					Name:  "bstoad",
-					Usage: "Convert BS date to AD date",
-					Action: func(c *cli.Context) {
-						fmt.Println("Unfortunately BS to AD isn't supported at this time. :(")
-					},
+					Name:   "bstoad",
+					Usage:  "Convert BS date to AD date",
+					Action: nc.convBSToAD,
 				},
 			},
 		},
