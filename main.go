@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/micro/cli"
 	"github.com/srishanbhattarai/nepcal/dateconv"
+	"github.com/urfave/cli"
 )
 
 const versionNumber = "0.3.2"
@@ -29,10 +29,7 @@ func main() {
 func runCli() {
 	cli := bootstrapCli()
 
-	err := cli.Run(os.Args)
-	if err != nil {
-		fmt.Printf("Something went wrong: %s\n", err.Error())
-	}
+	cli.Run(os.Args)
 }
 
 func bootstrapCli() *cli.App {
@@ -124,8 +121,6 @@ func parseRawDate(rawDate string) (int, int, int, bool) {
 	if err != nil {
 		return -1, -1, -1, false
 	}
-
-	fmt.Println("dd, mm, yy", dd, mm, yy)
 
 	if dd < 1 || dd > 31 || mm < 1 || mm > 12 || len(dateParts[2]) != 4 {
 		return -1, -1, -1, false
