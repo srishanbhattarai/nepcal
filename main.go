@@ -6,47 +6,126 @@ import (
 	"io"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
+	"github.com/micro/cli"
 	"github.com/srishanbhattarai/nepcal/dateconv"
 )
 
+const versionNumber = "0.3.2"
+
 // Cheap testing.
 var writer io.Writer = os.Stdout
-
-// Flag list
-var (
-	dateFlag = flag.Bool("d", false, "Print only the date")
-)
 
 func init() {
 	flag.Parse()
 }
 
 func main() {
-	render(*dateFlag)
+	cli := bootstrapCli()
+
+	err := cli.Run(os.Args)
+	if err != nil {
+		fmt.Printf("Something went wrong: %s\n", err.Error())
+	}
 }
 
-// Render decides what to show based on the flags.
-func render(dateFlag bool) {
-	if len(os.Args) > 3 {
-		var (
-			yy, _ = strconv.Atoi(os.Args[3])
-			mm, _ = strconv.Atoi(os.Args[2])
-			dd, _ = strconv.Atoi(os.Args[1])
-		)
+func bootstrapCli() *cli.App {
+	app := cli.NewApp()
+	app.Name = "nepcal"
+	app.Version = versionNumber
+	app.Usage = "Calendar and conversion utilities for Nepali dates"
+	app.Commands = []cli.Command{
+		{
+			Name:    "cal",
+			Aliases: []string{"c"},
+			Usage:   "Show calendar for the month",
+			Action: func(c *cli.Context) {
+				cal := newCalendar()
+				cal.Render(writer, time.Now())
+			},
+		},
+		{
+			Name:    "date",
+			Aliases: []string{"d"},
+			Usage:   "Show today's date",
+			Action: func(c *cli.Context) {
+				showDate(writer, time.Now())
+			},
+		},
+		{
+			Name:  "conv",
+			Usage: "Convert AD dates to BS and vice-versa",
+			Subcommands: []cli.Command{
+				{
+					Name:  "adtobs",
+					Usage: "Convert AD date to BS date",
+					Action: func(c *cli.Context) {
+						areArgsValid := func() bool {
+							if c.NArg() < 1 {
+								return false
+							}
 
-		showDate(writer, time.Date(yy, time.Month(mm), dd, 0, 0, 0, 0, time.UTC))
-		return
+							_, _, _, ok := parseRawDate(c.Args().First())
+							if !ok {
+								return false
+							}
+
+							return true
+						}()
+
+						if !areArgsValid {
+							fmt.Println("Please supply a valid date in the format mm-dd-yyyy. Example: `nepcal conv adtobs 14-08-2018`")
+							return
+						}
+
+						dd, mm, yy, _ := parseRawDate(c.Args().First())
+						showDate(writer, time.Date(yy, time.Month(mm), dd, 0, 0, 0, 0, time.UTC))
+					},
+				},
+				{
+					Name:  "bstoad",
+					Usage: "Convert BS date to AD date",
+					Action: func(c *cli.Context) {
+						fmt.Println("Unfortunately BS to AD isn't supported at this time. :(")
+					},
+				},
+			},
+		},
 	}
 
-	if dateFlag {
-		showDate(writer, time.Now())
-		return
+	return app
+}
+
+// Parse user input raw date into valid dd, mm, yy format. The last parameter is a boolean indicating if
+// the date is valid or not.
+func parseRawDate(rawDate string) (int, int, int, bool) {
+	dateParts := strings.Split(rawDate, "-")
+	if len(dateParts) != 3 {
+		return -1, -1, -1, false
 	}
 
-	cal := newCalendar()
-	cal.Render(writer, time.Now())
+	dd, err := strconv.Atoi(dateParts[0])
+	if err != nil {
+		return -1, -1, -1, false
+	}
+
+	mm, err := strconv.Atoi(dateParts[1])
+	if err != nil {
+		return -1, -1, -1, false
+	}
+
+	yy, err := strconv.Atoi(dateParts[2])
+	if err != nil {
+		return -1, -1, -1, false
+	}
+
+	if dd < 1 || dd > 31 || mm < 1 || mm > 12 || len(dateParts[2]) != 4 {
+		return -1, -1, -1, false
+	}
+
+	return dd, mm, yy, true
 }
 
 // showDate prints the current B.S. date
