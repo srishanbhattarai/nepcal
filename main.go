@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"io"
 	"os"
@@ -18,10 +17,6 @@ const versionNumber = "0.4.0"
 // Cheap testing.
 var writer io.Writer = os.Stdout
 
-func init() {
-	flag.Parse()
-}
-
 func main() {
 	runCli()
 }
@@ -33,7 +28,7 @@ func runCli() {
 }
 
 func bootstrapCli() *cli.App {
-	nc := nepcalCli{}
+	nc := newCli()
 
 	app := cli.NewApp()
 	app.Name = "nepcal"

@@ -1,0 +1,24 @@
+syntax = 'proto3';
+
+package api;
+
+service Nepcal {
+   rpc TodaysDate(Void) returns (TodaysDateRes) {} 
+   rpc ConvADToBS(ConvADToBSReq) returns (ConvADToBSRes) {}
+}
+
+message TodaysDateRes {
+    string date = 1;
+}
+
+message Void {}
+
+message ConvADToBSRes {
+    string date = 1;
+}
+
+message ConvADToBSReq {
+    int32 mm = 1;
+    int32 dd = 2;
+    int32 yy = 3;
+}

@@ -6,6 +6,21 @@ import (
 	"time"
 )
 
+// Converter is a struct that has methods for AD -> B.S conv and vice versa
+type Converter struct{}
+
+func (c Converter) ToBS(adDate time.Time) time.Time {
+	return ToBS(adDate)
+}
+
+func (c Converter) GetBSMonthName(month time.Month) (string, bool) {
+	return GetBSMonthName(month)
+}
+
+func (c Converter) GetNepWeekday(weekday time.Weekday) (string, bool) {
+	return GetNepWeekday(weekday)
+}
+
 // ToBS handles conversion of an Anno Domini (A.D) date into the Nepali
 // date format - Bikram Samwad (B.S).The approximate difference is
 // 56 years, 8 months.

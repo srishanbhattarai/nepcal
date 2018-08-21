@@ -1,16 +1,33 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"time"
 
+	proto "github.com/srishanbhattarai/nepcal/api/proto"
 	"github.com/urfave/cli"
+	"google.golang.org/grpc"
 )
 
 // nepcalCli is a struct to hold all the CLI behavior.
 // It is a small wrapper around the urfave/cli package to keep things clean.
-type nepcalCli struct{}
+type nepcalCli struct {
+	// TODO(srishan): Replace this with an interface
+	service proto.NepcalClient
+}
+
+func newCli() nepcalCli {
+	conn, err := grpc.Dial(":9999", grpc.WithInsecure())
+	if err != nil {
+		panic("Couldn't get grpc server: " + err.Error())
+	}
+
+	c := proto.NewNepcalClient(conn)
+
+	return nepcalCli{service: c}
+}
 
 // Shows the calendar for the current day.
 func (nepcalCli) showCalendar(c *cli.Context) {
@@ -26,7 +43,7 @@ func (nepcalCli) showDate(w io.Writer, t time.Time) func(c *cli.Context) {
 }
 
 // Convert AD date to BS date after validation.
-func (nepcalCli) convADToBS(c *cli.Context) {
+func (nc nepcalCli) convADToBS(c *cli.Context) {
 	areArgsValid := func() bool {
 		if c.NArg() < 1 {
 			return false
@@ -46,7 +63,19 @@ func (nepcalCli) convADToBS(c *cli.Context) {
 	}
 
 	mm, dd, yy, _ := parseRawDate(c.Args().First())
-	showDate(writer, time.Date(yy, time.Month(mm), dd, 0, 0, 0, 0, time.UTC))
+
+	date, err := nc.service.ConvADToBS(context.Background(), &proto.ConvADToBSReq{
+		Dd: int32(dd),
+		Mm: int32(mm),
+		Yy: int32(yy),
+	})
+
+	if err != nil {
+		fmt.Printf("Couldn't convert: %s", err.Error())
+		return
+	}
+
+	fmt.Printf("%s", date.Date)
 }
 
 // Not supported yet.
