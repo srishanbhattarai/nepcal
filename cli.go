@@ -14,8 +14,8 @@ type nepcalCli struct{}
 
 // Shows the calendar for the current day.
 func (nepcalCli) showCalendar(c *cli.Context) {
-	cal := newCalendar()
-	cal.Render(writer, time.Now())
+	cal := newCalendar(writer)
+	cal.Render(time.Now())
 }
 
 // Shows the date for the provided time. Returns a cli 'action'.

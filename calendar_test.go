@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"os"
 	"strings"
 	"testing"
 	"time"
@@ -53,7 +54,7 @@ func TestCalculateSkew(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			c := newCalendar()
+			c := newCalendar(os.Stdout)
 			assert.Equal(t, test.expected, c.calculateSkew(test.adDate, test.bsDate))
 		})
 	}
@@ -93,8 +94,8 @@ func TestRenderCalendar(t *testing.T) {
 
 		t.Run(test.name, func(t *testing.T) {
 			b.Reset()
-			c := newCalendar()
-			c.Render(b, test.t)
+			c := newCalendar(b)
+			c.Render(test.t)
 			assert.Equal(t, clean(test.expected), clean(b.String()))
 		})
 	}
