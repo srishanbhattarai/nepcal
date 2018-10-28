@@ -9,55 +9,60 @@ import (
 	"github.com/srishanbhattarai/nepcal/dateconv"
 )
 
-// calendar struct represents the state required to render
-// the B.S. calendar
+// calendar struct represents the state required to render the B.S. calendar using a tabwriter
+// that writes out to an io.Writer.
 type calendar struct {
 	val int
+	w   *tabwriter.Writer
 }
 
-// newCalendar returns a new instance of calendar with the initial value of 1.
-func newCalendar() *calendar {
-	return &calendar{1}
+// newCalendar returns a new instance of calendar with the initial value of 1 with the provided io.Writer.
+func newCalendar(w io.Writer) *calendar {
+	tabw := tabwriter.NewWriter(w, 0, 0, 1, ' ', 0)
+
+	return &calendar{
+		val: 1,
+		w:   tabw,
+	}
 }
 
 // Render prints the BS calendar for the given time.Time.
 // For printing formatted/aligned output, we use a tabwriter from the
 // standard library. It doesn't support ANSI escapes so we cant have
 // color/other enhancements to the output.(https://github.com/srishanbhattarai/nepcal/issues/4)
-func (c *calendar) Render(parentWriter io.Writer, ad time.Time) {
-	w := tabwriter.NewWriter(parentWriter, 0, 0, 1, ' ', 0)
+func (c *calendar) Render(ad time.Time) {
 	bs := dateconv.ToBS(ad)
 
-	c.renderBSDateHeader(w, bs)
-	c.renderStaticDaysHeader(w)
-	c.renderFirstRow(w, ad, bs)
-	c.renderCalWithoutFirstRow(w, ad, bs)
+	c.renderBSDateHeader(bs)
+	c.renderStaticDaysHeader()
+	c.renderFirstRow(ad, bs)
+	c.renderCalWithoutFirstRow(ad, bs)
 
-	w.Flush()
+	c.w.Flush()
 }
 
 // renderFirstRow renders the first row of the calendar. The reason this needs
 // to be handled separately is because there is a skew in each month which
 // determines which day the month starts from - we need to tab space the 'skew' number
 // of days, then start printing from the day after the skew.
-func (c *calendar) renderFirstRow(w io.Writer, ad, bs time.Time) {
+func (c *calendar) renderFirstRow(ad, bs time.Time) {
 	offset := c.calculateSkew(ad, bs)
 	for i := 0; i < offset; i++ {
-		fmt.Fprintf(w, "\t")
+		fmt.Fprintf(c.w, "\t")
 	}
 
 	for i := 0; i < (7 - offset); i++ {
-		fmt.Fprintf(w, "\t%d", c.val)
+		fmt.Fprintf(c.w, "\t%d", c.val)
 		c.next()
 	}
 
-	fmt.Fprint(w, "\n")
+	fmt.Fprint(c.w, "\n")
 }
 
 // renderCalWithoutFirstRow renders the rest of the calendar without the first row.
 // renderFirstRow will handle that due to special circumstances. We basically loop over
 // each row and print 7 numbers until we are at the end of the month.
-func (c *calendar) renderCalWithoutFirstRow(w io.Writer, ad, bs time.Time) {
+func (c *calendar) renderCalWithoutFirstRow(ad, bs time.Time) {
 	bsyy, bsmm, _ := bs.Date()
 	daysInMonth, ok := dateconv.BsDaysInMonthsByYear(bsyy, bsmm)
 	if !ok {
@@ -73,30 +78,30 @@ func (c *calendar) renderCalWithoutFirstRow(w io.Writer, ad, bs time.Time) {
 				break
 			}
 
-			fmt.Fprintf(w, "\t%d", c.val)
+			fmt.Fprintf(c.w, "\t%d", c.val)
 			c.next()
 		}
 
-		fmt.Fprint(w, "\n")
+		fmt.Fprint(c.w, "\n")
 	}
 }
 
 // renderStaticDaysHeader prints the static list of days for the calendar
-func (c *calendar) renderStaticDaysHeader(w io.Writer) {
+func (c *calendar) renderStaticDaysHeader() {
 	for _, v := range []string{"Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"} {
-		fmt.Fprintf(w, "%s\t", v)
+		fmt.Fprintf(c.w, "%s\t", v)
 	}
 
-	fmt.Fprint(w, "\n")
+	fmt.Fprint(c.w, "\n")
 }
 
 // renderBSDateHeader prints the date corresponding to the time e. This will
 // be the header of the calendar.
-func (c *calendar) renderBSDateHeader(w io.Writer, e time.Time) {
+func (c *calendar) renderBSDateHeader(e time.Time) {
 	yy, mm, dd := e.Date()
 
 	if month, ok := dateconv.GetBSMonthName(mm); ok {
-		fmt.Fprintf(w, "\t\t%s %d, %d\n\t", month, dd, yy)
+		fmt.Fprintf(c.w, "\t\t%s %d, %d\n\t", month, dd, yy)
 	}
 }
 
