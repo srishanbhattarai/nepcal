@@ -5,6 +5,7 @@
 Inspired from the Linux command line tool `cal`, `nepcal` adds a few nifty features especially for Nepali ([B.S](https://en.wikipedia.org/wiki/Vikram_Samvat)) dates.
 
 ## Feature Rundown
+
 Complete instructions on how to use each of these features are mentioned below.
 
 * [x] Show the current Nepali month's calendar
@@ -13,26 +14,33 @@ Complete instructions on how to use each of these features are mentioned below.
 * [ ] Convert an B.S. date into A.D.
 
 ## Installation
-Pre-built tarball binaries are available in the [Releases](https://github.com/srishanbhattarai/nepcal/releases) page. 
-Download and untar the binary for your platform, then move it into your `$PATH` e.g. `/usr/local/bin`.
+
+Pre-built tarball binaries are available in the [Releases](https://github.com/srishanbhattarai/nepcal/releases) page. Download and untar the binary for your platform, then move it into your `$PATH` e.g. `/usr/local/bin`.
 
 You might need to give the script execution permissions. On Linux and MacOS this would mean using `chmod` as follows:
+
 ```
 $ chmod +x /usr/local/bin/nepcal
 ```
 
 ### MacOS via Homebrew
+
 Tap the repository first.
+
 ```
 $ brew tap srishanbhattarai/nepcal https://github.com/srishanbhattarai/nepcal
 ```
+
 Then, run:
+
 ```
 $ brew install nepcal
 ```
 
 ### Manual Installation
+
 You can also install `nepcal` manually if you have Go installed
+
 ```
 $ go get -v github.com/srishanbhattarai/nepcal
 ```
@@ -40,9 +48,11 @@ $ go get -v github.com/srishanbhattarai/nepcal
 Run `nepcal` on your terminal - if you see some formatted output, you are good to go!
 
 ## Usage
+
 Complete details can be found by running `nepcal` without any arguments.
 
-### Monthly calendar
+### Monthly Calendar
+
 ```
 $ nepcal cal # or nepcal c
 
@@ -56,6 +66,7 @@ $ nepcal cal # or nepcal c
 ```
 
 ### Today's date and day
+
 ```
 $ nepcal date # or nepcal d
 
@@ -63,7 +74,9 @@ $ nepcal date # or nepcal d
 ```
 
 ### Convert A.D. date to B.S.
+
 Use the `mm-dd-yyyy` format when converting A.D. to B.S.
+
 ```
 $ nepcal conv adtobs 08-21-1994
 
@@ -71,7 +84,9 @@ $ nepcal conv adtobs 08-21-1994
 ```
 
 ## Contributing
+
 Please file an issue if you have any problems with `nepcal` or, have a look at the issues page for contributing on existing issues. Also, read the [code of conduct](https://github.com/srishanbhattarai/nepcal/blob/master/CODE_OF_CONDUCT.md).
 
 ## License
+
 [MIT](LICENSE)
