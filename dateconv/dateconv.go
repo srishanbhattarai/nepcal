@@ -83,7 +83,7 @@ func TotalDaysInBSYear(bsYear int) (int, error) {
 
 	sum := 0
 	for _, value := range days {
-		sum = sum + value
+		sum += value
 	}
 
 	return sum, nil
