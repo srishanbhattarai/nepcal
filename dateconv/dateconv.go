@@ -75,13 +75,13 @@ func BsDaysInMonthsByYear(yy int, mm time.Month) (int, bool) {
 
 // TotalDaysInBSYear returns total number of days in a particular BS year.
 func TotalDaysInBSYear(bsYear int) (int, error) {
-	sum := 0
 	days, ok := bsDaysInMonthsByYear[bsYear]
 
-	if ok == false {
+	if !ok {
 		return -1, fmt.Errorf("Year should be in between %d and %d", bsLBound, bsUBound)
 	}
 
+	sum := 0
 	for _, value := range days {
 		sum = sum + value
 	}
