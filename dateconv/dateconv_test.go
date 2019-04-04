@@ -1,6 +1,7 @@
 package dateconv
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -174,4 +175,31 @@ func TestBsDaysInMonthsByYear(t *testing.T) {
 			assert.Equal(t, test.expectedBool, ok)
 		})
 	}
+}
+
+func TestTotalDaysInBSYear(t *testing.T) {
+	tests := []struct {
+		name     string
+		year     int
+		expected int
+	}{
+		{"returns total number of days in 2001 BS", 2001, 365},
+		{"returns total number of days in 2077 BS", 2077, 366},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			total, err := TotalDaysInBSYear(test.year)
+
+			assert.Equal(t, test.expected, total, err)
+		})
+	}
+
+	t.Run("errors if BS year is out of range", func(t *testing.T) {
+		_, err := TotalDaysInBSYear(3050)
+
+		if assert.Error(t, err) {
+			assert.Equal(t, fmt.Errorf("Year should be in between %d and %d", bsLBound, bsUBound), err)
+		}
+	})
 }

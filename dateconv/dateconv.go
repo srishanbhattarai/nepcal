@@ -3,6 +3,7 @@
 package dateconv
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -70,6 +71,22 @@ func BsDaysInMonthsByYear(yy int, mm time.Month) (int, bool) {
 	}
 
 	return months[query], true
+}
+
+// TotalDaysInBSYear returns total number of days in a particular BS year.
+func TotalDaysInBSYear(bsYear int) (int, error) {
+	days, ok := bsDaysInMonthsByYear[bsYear]
+
+	if !ok {
+		return -1, fmt.Errorf("Year should be in between %d and %d", bsLBound, bsUBound)
+	}
+
+	sum := 0
+	for _, value := range days {
+		sum += value
+	}
+
+	return sum, nil
 }
 
 // toTime creates a new time.Time with the basic yy/mm/dd parameters.
