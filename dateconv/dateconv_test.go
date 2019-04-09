@@ -12,37 +12,47 @@ func TestToBS(t *testing.T) {
 	tests := []struct {
 		name   string
 		input  time.Time
-		output time.Time
+		output BSDate
 	}{
 		{
 			"case1",
 			toTime(2018, 04, 01),
-			toTime(2074, 12, 18),
+			NewBSDate(2074, 12, 18),
 		},
 		{
 			"case2",
 			toTime(1943, 04, 15),
-			toTime(2000, 01, 02),
+			NewBSDate(2000, 01, 02),
 		},
 		{
 			"case3",
 			toTime(2018, 04, 17),
-			toTime(2075, 01, 04),
+			NewBSDate(2075, 01, 04),
 		},
 		{
 			"case4",
 			toTime(2018, 05, 01),
-			toTime(2075, 01, 18),
+			NewBSDate(2075, 01, 18),
 		},
 		{
 			"case5",
 			toTime(1960, 9, 16),
-			toTime(2017, 06, 1),
+			NewBSDate(2017, 06, 1),
 		},
 		{
 			"case6",
 			toTime(2037, 9, 16),
-			toTime(-1, -1, -1),
+			NewBSDate(-1, -1, -1),
+		},
+		{
+			"case7",
+			toTime(2019, 06, 15),
+			NewBSDate(2076, 02, 32),
+		},
+		{
+			"case8",
+			toTime(2019, 06, 13),
+			NewBSDate(2076, 02, 30),
 		},
 	}
 
