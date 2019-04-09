@@ -34,7 +34,7 @@ var bsMonths = map[int]string{
 	baisakh:  "बैशाख",
 	jestha:   "जेठ",
 	ashar:    "असार",
-	shrawan:  "सावन",
+	shrawan:  "साउन",
 	bhadra:   "भदौ",
 	ashoj:    "असोज",
 	kartik:   "कार्तिक",

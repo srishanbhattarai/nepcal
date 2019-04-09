@@ -25,7 +25,7 @@ func NewBSDate(yy, mm, dd int) BSDate {
 }
 
 // ToBS handles conversion of an Anno Domini (A.D) date into the Nepali
-// date format - Bikram Sambad (B.S).The approximate difference is
+// date format - Bikram Sambat (B.S).The approximate difference is
 // 56 years, 8 months.
 func ToBS(adDate time.Time) BSDate {
 	adLBound := toTime(adLBoundY, adLBoundM, adLBoundD)
