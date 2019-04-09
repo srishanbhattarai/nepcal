@@ -45,7 +45,7 @@ func (c *calendar) Render(ad time.Time) {
 // to be handled separately is because there is a skew in each month which
 // determines which day the month starts from - we need to tab space the 'skew' number
 // of days, then start printing from the day after the skew.
-func (c *calendar) renderFirstRow(ad, bs time.Time) {
+func (c *calendar) renderFirstRow(ad time.Time, bs dateconv.BSDate) {
 	offset := c.calculateSkew(ad, bs)
 	for i := 0; i < offset; i++ {
 		fmt.Fprintf(c.w, "\t")
@@ -62,9 +62,9 @@ func (c *calendar) renderFirstRow(ad, bs time.Time) {
 // renderCalWithoutFirstRow renders the rest of the calendar without the first row.
 // renderFirstRow will handle that due to special circumstances. We basically loop over
 // each row and print 7 numbers until we are at the end of the month.
-func (c *calendar) renderCalWithoutFirstRow(ad, bs time.Time) {
+func (c *calendar) renderCalWithoutFirstRow(ad time.Time, bs dateconv.BSDate) {
 	bsyy, bsmm, _ := bs.Date()
-	daysInMonth, ok := dateconv.BsDaysInMonthsByYear(bsyy, bsmm)
+	daysInMonth, ok := dateconv.BsDaysInMonthsByYear(bsyy, time.Month(bsmm))
 	if !ok {
 		return
 	}
@@ -97,10 +97,10 @@ func (c *calendar) renderStaticDaysHeader() {
 
 // renderBSDateHeader prints the date corresponding to the time e. This will
 // be the header of the calendar.
-func (c *calendar) renderBSDateHeader(e time.Time) {
+func (c *calendar) renderBSDateHeader(e dateconv.BSDate) {
 	yy, mm, dd := e.Date()
 
-	if month, ok := dateconv.GetBSMonthName(mm); ok {
+	if month, ok := dateconv.GetBSMonthName(time.Month(mm)); ok {
 		fmt.Fprintf(c.w, "\t\t%s %d, %d\n\t", month, dd, yy)
 	}
 }
@@ -109,7 +109,7 @@ func (c *calendar) renderBSDateHeader(e time.Time) {
 // BS date, we calculate the diff in days from the BS date to the start of the month in BS.
 // We subtract that from the AD date, and get the weekday.
 // For example, a skew of 2 means the month starts from Tuesday.
-func (c *calendar) calculateSkew(ad, bs time.Time) int {
+func (c *calendar) calculateSkew(ad time.Time, bs dateconv.BSDate) int {
 	_, _, bsdd := bs.Date()
 
 	dayDiff := (bsdd % 7) - 1

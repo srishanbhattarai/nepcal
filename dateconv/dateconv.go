@@ -7,10 +7,27 @@ import (
 	"time"
 )
 
+// BSDate represents a Bikram Sambat date.
+type BSDate struct {
+	year  int
+	month int
+	days  int
+}
+
+// Date returns the yy, mm, dd values represented by the BS date.
+func (b BSDate) Date() (int, int, int) {
+	return b.year, b.month, b.days
+}
+
+// NewBSDate is a constructor for a new Bikram Sambat date.
+func NewBSDate(yy, mm, dd int) BSDate {
+	return BSDate{yy, mm, dd}
+}
+
 // ToBS handles conversion of an Anno Domini (A.D) date into the Nepali
-// date format - Bikram Samwad (B.S).The approximate difference is
+// date format - Bikram Sambad (B.S).The approximate difference is
 // 56 years, 8 months.
-func ToBS(adDate time.Time) time.Time {
+func ToBS(adDate time.Time) BSDate {
 	adLBound := toTime(adLBoundY, adLBoundM, adLBoundD)
 	if !adDate.After(adLBound) {
 		panic("Can only work with dates after 1943 April 14.")
@@ -34,7 +51,7 @@ func ToBS(adDate time.Time) time.Time {
 		return -1, -1, -1
 	}()
 
-	return toTime(year, month, days)
+	return NewBSDate(year, month, days)
 }
 
 // GetBSMonthName returns the B.S. month name from the time.Month type.

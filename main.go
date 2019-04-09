@@ -108,7 +108,7 @@ func showDate(w io.Writer, t time.Time) {
 	yy, mm, dd := t.Date()
 
 	bsyy, bsmm, bsdd := dateconv.ToBS(toTime(yy, mm, dd)).Date()
-	month, monthOk := dateconv.GetBSMonthName(bsmm)
+	month, monthOk := dateconv.GetBSMonthName(time.Month(bsmm))
 	weekday, weekdayOk := dateconv.GetNepWeekday(t.Weekday())
 
 	if monthOk && weekdayOk {

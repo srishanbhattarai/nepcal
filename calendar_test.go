@@ -23,7 +23,7 @@ func TestCalculateSkew(t *testing.T) {
 	tests := []struct {
 		name     string
 		adDate   time.Time
-		bsDate   time.Time
+		bsDate   dateconv.BSDate
 		expected int
 	}{
 		{
