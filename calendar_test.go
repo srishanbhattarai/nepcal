@@ -2,12 +2,10 @@ package main
 
 import (
 	"bytes"
-	"os"
 	"strings"
 	"testing"
 	"time"
 
-	"github.com/srishanbhattarai/nepcal/dateconv"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,48 +14,6 @@ var fixtures = map[string]time.Time{
 	"May19":  time.Date(2018, time.May, 19, 0, 0, 0, 0, time.UTC),
 	"May26":  time.Date(2018, time.May, 26, 0, 0, 0, 0, time.UTC),
 	"June15": time.Date(2018, time.June, 15, 0, 0, 0, 0, time.UTC),
-}
-
-// Test the 'calculateSkew' function.
-func TestCalculateSkew(t *testing.T) {
-	tests := []struct {
-		name     string
-		adDate   time.Time
-		bsDate   dateconv.BSDate
-		expected int
-	}{
-		{
-			"less than 7",
-			fixtures["May17"],
-			dateconv.ToBS(fixtures["May17"]),
-			2,
-		},
-		{
-			"less than 7",
-			fixtures["May19"],
-			dateconv.ToBS(fixtures["May19"]),
-			2,
-		},
-		{
-			"less than 7",
-			fixtures["June15"],
-			dateconv.ToBS(fixtures["June15"]),
-			5,
-		},
-		{
-			"more than 7",
-			fixtures["May26"],
-			dateconv.ToBS(fixtures["May26"]),
-			2,
-		},
-	}
-
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			c := newCalendar(os.Stdout)
-			assert.Equal(t, test.expected, c.calculateSkew(test.adDate, test.bsDate))
-		})
-	}
 }
 
 // Test the 'renderCalendar' function

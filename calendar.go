@@ -36,17 +36,17 @@ func (c *calendar) Render(ad time.Time) {
 	c.renderBSDateHeader(bs)
 	c.renderStaticDaysHeader()
 	c.renderFirstRow(ad, bs)
-	c.renderCalWithoutFirstRow(ad, bs)
+	c.renderCalWithoutFirstRow(bs)
 
 	c.w.Flush()
 }
 
 // renderFirstRow renders the first row of the calendar. The reason this needs
-// to be handled separately is because there is a skew in each month which
-// determines which day the month starts from - we need to tab space the 'skew' number
-// of days, then start printing from the day after the skew.
+// to be handled separately is because there is a offset in each month which
+// determines which day the month starts from - we need to tab space the 'offset' number
+// of days, then start printing from the day after the offset.
 func (c *calendar) renderFirstRow(ad time.Time, bs dateconv.BSDate) {
-	offset := c.calculateSkew(ad, bs)
+	offset := bs.MonthStartsAtDay(ad)
 	for i := 0; i < offset; i++ {
 		fmt.Fprintf(c.w, "\t")
 	}
@@ -62,12 +62,8 @@ func (c *calendar) renderFirstRow(ad time.Time, bs dateconv.BSDate) {
 // renderCalWithoutFirstRow renders the rest of the calendar without the first row.
 // renderFirstRow will handle that due to special circumstances. We basically loop over
 // each row and print 7 numbers until we are at the end of the month.
-func (c *calendar) renderCalWithoutFirstRow(ad time.Time, bs dateconv.BSDate) {
-	bsyy, bsmm, _ := bs.Date()
-	daysInMonth, ok := dateconv.BsDaysInMonthsByYear(bsyy, time.Month(bsmm))
-	if !ok {
-		return
-	}
+func (c *calendar) renderCalWithoutFirstRow(bs dateconv.BSDate) {
+	daysInMonth, _ := bs.DaysInMonth() // Invariant: the month value is always valid and 'ok' is never false.
 
 	for c.val < daysInMonth {
 		start := daysInMonth - c.val
@@ -103,22 +99,6 @@ func (c *calendar) renderBSDateHeader(e dateconv.BSDate) {
 	if month, ok := dateconv.GetBSMonthName(time.Month(mm)); ok {
 		fmt.Fprintf(c.w, "\t\t%s %d, %d\n\t", month, dd, yy)
 	}
-}
-
-// calculateSkew calculates the offset at the beginning of the month. Given an AD and
-// BS date, we calculate the diff in days from the BS date to the start of the month in BS.
-// We subtract that from the AD date, and get the weekday.
-// For example, a skew of 2 means the month starts from Tuesday.
-func (c *calendar) calculateSkew(ad time.Time, bs dateconv.BSDate) int {
-	_, _, bsdd := bs.Date()
-
-	dayDiff := (bsdd % 7) - 1
-	adWithoutbsDiffDays := ad.AddDate(0, 0, -dayDiff)
-	d := adWithoutbsDiffDays.Weekday()
-
-	// Since time.Weekday is an iota and not an iota + 1 we can avoid
-	// subtracting 1 from the return value.
-	return int(d)
 }
 
 // next increments the value counter.
