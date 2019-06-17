@@ -17,42 +17,42 @@ func TestToBS(t *testing.T) {
 		{
 			"case1",
 			toTime(2018, 04, 01),
-			NewBSDate(2074, 12, 18),
+			newBSDate(2074, 12, 18),
 		},
 		{
 			"case2",
 			toTime(1943, 04, 15),
-			NewBSDate(2000, 01, 02),
+			newBSDate(2000, 01, 02),
 		},
 		{
 			"case3",
 			toTime(2018, 04, 17),
-			NewBSDate(2075, 01, 04),
+			newBSDate(2075, 01, 04),
 		},
 		{
 			"case4",
 			toTime(2018, 05, 01),
-			NewBSDate(2075, 01, 18),
+			newBSDate(2075, 01, 18),
 		},
 		{
 			"case5",
 			toTime(1960, 9, 16),
-			NewBSDate(2017, 06, 1),
+			newBSDate(2017, 06, 1),
 		},
 		{
 			"case6",
 			toTime(2037, 9, 16),
-			NewBSDate(-1, -1, -1),
+			newBSDate(-1, -1, -1),
 		},
 		{
 			"case7",
 			toTime(2019, 06, 15),
-			NewBSDate(2076, 02, 32),
+			newBSDate(2076, 02, 32),
 		},
 		{
 			"case8",
 			toTime(2019, 06, 13),
-			NewBSDate(2076, 02, 30),
+			newBSDate(2076, 02, 30),
 		},
 	}
 
@@ -212,4 +212,52 @@ func TestTotalDaysInBSYear(t *testing.T) {
 			assert.Equal(t, fmt.Errorf("Year should be in between %d and %d", bsLBound, bsUBound), err)
 		}
 	})
+}
+
+// Test the 'MonthStartsAtDay' function.
+func TestMonthStartsAtDay(t *testing.T) {
+	var fixtures = map[string]time.Time{
+		"May17":  time.Date(2018, time.May, 17, 0, 0, 0, 0, time.UTC),
+		"May19":  time.Date(2018, time.May, 19, 0, 0, 0, 0, time.UTC),
+		"May26":  time.Date(2018, time.May, 26, 0, 0, 0, 0, time.UTC),
+		"June15": time.Date(2018, time.June, 15, 0, 0, 0, 0, time.UTC),
+	}
+
+	tests := []struct {
+		name     string
+		adDate   time.Time
+		bsDate   BSDate
+		expected int
+	}{
+		{
+			"less than 7",
+			fixtures["May17"],
+			ToBS(fixtures["May17"]),
+			2,
+		},
+		{
+			"less than 7",
+			fixtures["May19"],
+			ToBS(fixtures["May19"]),
+			2,
+		},
+		{
+			"less than 7",
+			fixtures["June15"],
+			ToBS(fixtures["June15"]),
+			5,
+		},
+		{
+			"more than 7",
+			fixtures["May26"],
+			ToBS(fixtures["May26"]),
+			2,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			assert.Equal(t, test.expected, test.bsDate.MonthStartsAtDay(test.adDate))
+		})
+	}
 }

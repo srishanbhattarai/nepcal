@@ -19,8 +19,28 @@ func (b BSDate) Date() (int, int, int) {
 	return b.year, b.month, b.days
 }
 
-// NewBSDate is a constructor for a new Bikram Sambat date.
-func NewBSDate(yy, mm, dd int) BSDate {
+// DaysInMonth returns the total number of days in the month for this date.
+// The invariant here is that 'b.month' is always a valid month.
+func (b BSDate) DaysInMonth() (int, bool) {
+	return BsDaysInMonthsByYear(b.year, time.Month(b.month))
+}
+
+// MonthStartsAtDay calculates the offset at the beginning of the month. Given an AD date
+// we calculate the diff in days from the BS date to the start of the month in BS.
+// We subtract that from the AD date, and get the weekday.
+// For example, a value of 2 means the month starts from Tuesday.
+func (b BSDate) MonthStartsAtDay(ad time.Time) int {
+	dayDiff := (b.days % 7) - 1
+	adWithoutbsDiffDays := ad.AddDate(0, 0, -dayDiff)
+	d := adWithoutbsDiffDays.Weekday()
+
+	// Since time.Weekday is an iota and not an iota + 1 we can avoid
+	// subtracting 1 from the return value.
+	return int(d)
+}
+
+// newBSDate is a constructor for a new Bikram Sambat date.
+func newBSDate(yy, mm, dd int) BSDate {
 	return BSDate{yy, mm, dd}
 }
 
@@ -51,7 +71,7 @@ func ToBS(adDate time.Time) BSDate {
 		return -1, -1, -1
 	}()
 
-	return NewBSDate(year, month, days)
+	return newBSDate(year, month, days)
 }
 
 // GetBSMonthName returns the B.S. month name from the time.Month type.
