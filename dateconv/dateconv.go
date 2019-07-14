@@ -49,16 +49,23 @@ func newBSDate(yy, mm, dd int) BSDate {
 // 56 years, 8 months.
 func ToBS(adDate time.Time) BSDate {
 	adLBound := toTime(adLBoundY, adLBoundM, adLBoundD)
+
+	// Convert incoming date to UTC
+	adYear, adMonth, adDay := adDate.Date()
+	adDateUTC := toTime(adYear, int(adMonth), adDay)
+
 	if !adDate.After(adLBound) {
 		panic("Can only work with dates after 1943 April 14.")
 	}
-	totalDiff := int(adDate.Sub(adLBound).Hours() / 24)
+
+	totalDiff := int(adDateUTC.Sub(adLBound).Hours() / 24)
 
 	// Redistribute the diff along the BS data grid
 	year, month, days := func() (int, int, int) {
 		for i := bsLBound; i < bsUBound; i++ {
 			for j := 0; j < 12; j++ {
 				days := bsDaysInMonthsByYear[i][j]
+
 				if days <= totalDiff {
 					totalDiff = totalDiff - days
 					continue
@@ -111,14 +118,15 @@ func BsDaysInMonthsByYear(yy int, mm time.Month) (int, bool) {
 }
 
 // TotalDaysInBSYear returns total number of days in a particular BS year.
-func TotalDaysInBSYear(bsYear int) (int, error) {
-	days, ok := bsDaysInMonthsByYear[bsYear]
+func TotalDaysInBSYear(year int) (int, error) {
+	days, ok := bsDaysInMonthsByYear[year]
 
 	if !ok {
 		return -1, fmt.Errorf("Year should be in between %d and %d", bsLBound, bsUBound)
 	}
 
 	sum := 0
+
 	for _, value := range days {
 		sum += value
 	}
