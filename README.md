@@ -2,7 +2,7 @@
 
 > Calendar and conversion utilities for Nepali dates
 
-Inspired from the Linux command line tool `cal`, `nepcal` adds a few nifty features especially for Nepali ([B.S](https://en.wikipedia.org/wiki/Vikram_Samvat)) dates.
+Inspired from the Linux command line tool `cal`, `nepcal` adds a few nifty features especially for Nepali ([B.S.](https://en.wikipedia.org/wiki/Vikram_Samvat)) dates.
 
 ## Feature Rundown
 
@@ -70,7 +70,7 @@ $ nepcal cal # or nepcal c
 ```
 $ nepcal date # or nepcal d
 
-सावन 29, 2075 मंगलबार
+साउन 29, 2075 मंगलबार
 ```
 
 ### Convert A.D. date to B.S.
