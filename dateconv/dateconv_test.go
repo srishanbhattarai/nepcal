@@ -2,11 +2,23 @@ package dateconv
 
 import (
 	"fmt"
+	"math/rand"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
 )
+
+// dummyNepaliTime returns a time between 00:00 to 05:45
+// which when converted to UTC is the previous day
+func dummyNepaliTime(yy int, mm int, dd int) time.Time {
+	loc, _ := time.LoadLocation("Asia/Kathmandu")
+
+	hour := rand.Intn(5)
+	minute := rand.Intn(45)
+
+	return time.Date(yy, time.Month(mm), dd, hour, minute, 0, 0, loc)
+}
 
 func TestToBS(t *testing.T) {
 	tests := []struct {
@@ -53,6 +65,11 @@ func TestToBS(t *testing.T) {
 			"case8",
 			toTime(2019, 06, 13),
 			newBSDate(2076, 02, 30),
+		},
+		{
+			"case9",
+			dummyNepaliTime(2019, 05, 05),
+			newBSDate(2076, 01, 22),
 		},
 	}
 
