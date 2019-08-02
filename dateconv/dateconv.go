@@ -134,6 +134,26 @@ func TotalDaysInBSYear(year int) (int, error) {
 	return sum, nil
 }
 
+// TotalDaysSpanned returns the total number of days spanned in the current year.
+func TotalDaysSpanned() (int, error) {
+	bsDate := ToBS(time.Now())
+	days, ok := bsDaysInMonthsByYear[bsDate.year]
+
+	if !ok {
+		return -1, fmt.Errorf("Year should be in between %d and %d", bsLBound, bsUBound)
+	}
+
+	sum := 0
+
+	for i := 0; i < bsDate.month; i++ {
+		sum += days[i]
+	}
+
+	sum += bsDate.days
+
+	return sum, nil
+}
+
 // toTime creates a new time.Time with the basic yy/mm/dd parameters.
 func toTime(yy, mm, dd int) time.Time {
 	return time.Date(yy, time.Month(mm), dd, 0, 0, 0, 0, time.UTC)
