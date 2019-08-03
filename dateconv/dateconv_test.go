@@ -233,10 +233,10 @@ func TestTotalDaysInBSYear(t *testing.T) {
 
 func TestMonthStartsAtDay(t *testing.T) {
 	var fixtures = map[string]time.Time{
-		"May 17 2018":  time.Date(2018, time.May, 17, 0, 0, 0, 0, time.UTC),
-		"May 19 2018":  time.Date(2018, time.May, 19, 0, 0, 0, 0, time.UTC),
-		"May 26 2018":  time.Date(2018, time.May, 26, 0, 0, 0, 0, time.UTC),
-		"June 15 2018": time.Date(2018, time.June, 15, 0, 0, 0, 0, time.UTC),
+		"May_17_2018":  time.Date(2018, time.May, 17, 0, 0, 0, 0, time.UTC),
+		"May_19_2018":  time.Date(2018, time.May, 19, 0, 0, 0, 0, time.UTC),
+		"May_26_2018":  time.Date(2018, time.May, 26, 0, 0, 0, 0, time.UTC),
+		"June_15_2018": time.Date(2018, time.June, 15, 0, 0, 0, 0, time.UTC),
 	}
 
 	tests := []struct {
@@ -247,26 +247,26 @@ func TestMonthStartsAtDay(t *testing.T) {
 	}{
 		{
 			"less than 7",
-			fixtures["May17"],
-			ToBS(fixtures["May17"]),
+			fixtures["May_17_2018"],
+			ToBS(fixtures["May_17_2018"]),
 			2,
 		},
 		{
 			"less than 7",
-			fixtures["May19"],
-			ToBS(fixtures["May19"]),
+			fixtures["May_19_2018"],
+			ToBS(fixtures["May_19_2018"]),
 			2,
 		},
 		{
 			"less than 7",
-			fixtures["June15"],
-			ToBS(fixtures["June15"]),
+			fixtures["June_15_2018"],
+			ToBS(fixtures["June_15_2018"]),
 			5,
 		},
 		{
 			"more than 7",
-			fixtures["May26"],
-			ToBS(fixtures["May26"]),
+			fixtures["May_26_2018"],
+			ToBS(fixtures["May_26_2018"]),
 			2,
 		},
 	}
@@ -284,14 +284,14 @@ func TestTotalDaysSpanned(t *testing.T) {
 		date     time.Time
 		expected int
 	}{
-		{"June 13 2018", toTime(2018, 8, 03), 112},
-		{"June 13 2019", toTime(2019, 8, 03), 112},
-		{"April 12 2020", toTime(2020, 04, 12), 365},
-		{"April 13 2020", toTime(2020, 04, 13), 1},
-		{"April 14 2020", toTime(2020, 04, 14), 2},
-		{"April 13 2021", toTime(2021, 04, 13), 366},
-		{"April 14 2021", toTime(2021, 04, 14), 1},
-		{"April 15 2021", toTime(2021, 04, 15), 2},
+		{"June_13_2018", toTime(2018, 8, 03), 112},
+		{"June_13_2019", toTime(2019, 8, 03), 112},
+		{"April_12_2020", toTime(2020, 04, 12), 365},
+		{"April_13_2020", toTime(2020, 04, 13), 1},
+		{"April_14_2020", toTime(2020, 04, 14), 2},
+		{"April_13_2021", toTime(2021, 04, 13), 366},
+		{"April_14_2021", toTime(2021, 04, 14), 1},
+		{"April_15_2021", toTime(2021, 04, 15), 2},
 	}
 
 	for _, test := range tests {
