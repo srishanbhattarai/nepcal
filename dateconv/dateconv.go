@@ -151,7 +151,7 @@ func TotalDaysSpanned() (int, error) {
 
 	sum := 0
 
-	for i := 0; i < bsDate.month; i++ {
+	for i := 0; i < bsDate.month-1; i++ {
 		sum += days[i]
 	}
 
