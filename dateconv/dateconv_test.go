@@ -231,13 +231,12 @@ func TestTotalDaysInBSYear(t *testing.T) {
 	})
 }
 
-// Test the 'MonthStartsAtDay' function.
 func TestMonthStartsAtDay(t *testing.T) {
 	var fixtures = map[string]time.Time{
-		"May17":  time.Date(2018, time.May, 17, 0, 0, 0, 0, time.UTC),
-		"May19":  time.Date(2018, time.May, 19, 0, 0, 0, 0, time.UTC),
-		"May26":  time.Date(2018, time.May, 26, 0, 0, 0, 0, time.UTC),
-		"June15": time.Date(2018, time.June, 15, 0, 0, 0, 0, time.UTC),
+		"May 17, 2018":  time.Date(2018, time.May, 17, 0, 0, 0, 0, time.UTC),
+		"May 19, 2018":  time.Date(2018, time.May, 19, 0, 0, 0, 0, time.UTC),
+		"May 26, 2018":  time.Date(2018, time.May, 26, 0, 0, 0, 0, time.UTC),
+		"June 15, 2018": time.Date(2018, time.June, 15, 0, 0, 0, 0, time.UTC),
 	}
 
 	tests := []struct {
@@ -277,4 +276,39 @@ func TestMonthStartsAtDay(t *testing.T) {
 			assert.Equal(t, test.expected, test.bsDate.MonthStartsAtDay(test.adDate))
 		})
 	}
+}
+
+func TestTotalDaysSpanned(t *testing.T) {
+	tests := []struct {
+		name     string
+		date     time.Time
+		expected int
+	}{
+		{"June 13 2018", toTime(2018, 8, 03), 112},
+		{"June 13 2019", toTime(2019, 8, 03), 112},
+		{"April 12 2020", toTime(2020, 04, 12), 365},
+		{"April 13 2020", toTime(2020, 04, 13), 1},
+		{"April 14 2020", toTime(2020, 04, 14), 2},
+		{"April 13 2021", toTime(2021, 04, 13), 366},
+		{"April 14 2021", toTime(2021, 04, 14), 1},
+		{"April 15 2021", toTime(2021, 04, 15), 2},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			now = func() time.Time { return test.date }
+			total, err := TotalDaysSpanned()
+
+			assert.Equal(t, test.expected, total, err)
+		})
+	}
+
+	t.Run("errors if BS year is out of range", func(t *testing.T) {
+		now = func() time.Time { return toTime(3050, 06, 15) }
+		_, err := TotalDaysSpanned()
+
+		if assert.Error(t, err) {
+			assert.Equal(t, fmt.Errorf("Year should be in between %d and %d", bsLBound, bsUBound), err)
+		}
+	})
 }
