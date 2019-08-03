@@ -233,10 +233,10 @@ func TestTotalDaysInBSYear(t *testing.T) {
 
 func TestMonthStartsAtDay(t *testing.T) {
 	var fixtures = map[string]time.Time{
-		"May 17, 2018":  time.Date(2018, time.May, 17, 0, 0, 0, 0, time.UTC),
-		"May 19, 2018":  time.Date(2018, time.May, 19, 0, 0, 0, 0, time.UTC),
-		"May 26, 2018":  time.Date(2018, time.May, 26, 0, 0, 0, 0, time.UTC),
-		"June 15, 2018": time.Date(2018, time.June, 15, 0, 0, 0, 0, time.UTC),
+		"May 17 2018":  time.Date(2018, time.May, 17, 0, 0, 0, 0, time.UTC),
+		"May 19 2018":  time.Date(2018, time.May, 19, 0, 0, 0, 0, time.UTC),
+		"May 26 2018":  time.Date(2018, time.May, 26, 0, 0, 0, 0, time.UTC),
+		"June 15 2018": time.Date(2018, time.June, 15, 0, 0, 0, 0, time.UTC),
 	}
 
 	tests := []struct {
