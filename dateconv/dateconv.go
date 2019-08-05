@@ -120,13 +120,11 @@ func BsDaysInMonthsByYear(yy int, mm time.Month) (int, bool) {
 // TotalDaysInBSYear returns total number of days in a particular BS year.
 func TotalDaysInBSYear(year int) (int, error) {
 	days, ok := bsDaysInMonthsByYear[year]
-
 	if !ok {
 		return -1, fmt.Errorf("Year should be in between %d and %d", bsLBound, bsUBound)
 	}
 
 	sum := 0
-
 	for _, value := range days {
 		sum += value
 	}
@@ -143,19 +141,16 @@ var now = func() time.Time {
 // current year inclusive of the current day.
 func TotalDaysSpanned() (int, error) {
 	bsDate := ToBS(now())
-	days, ok := bsDaysInMonthsByYear[bsDate.year]
 
+	days, ok := bsDaysInMonthsByYear[bsDate.year]
 	if !ok {
 		return -1, fmt.Errorf("Year should be in between %d and %d", bsLBound, bsUBound)
 	}
 
-	sum := 0
-
+	sum := bsDate.days
 	for i := 0; i < bsDate.month-1; i++ {
 		sum += days[i]
 	}
-
-	sum += bsDate.days
 
 	return sum, nil
 }
