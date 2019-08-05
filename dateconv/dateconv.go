@@ -132,15 +132,11 @@ func TotalDaysInBSYear(year int) (int, error) {
 	return sum, nil
 }
 
-// now returns the current time
-var now = func() time.Time {
-	return time.Now()
-}
-
-// TotalDaysSpanned returns the total number of days spanned in the
-// current year inclusive of the current day.
-func TotalDaysSpanned() (int, error) {
-	bsDate := ToBS(now())
+// totalDaysSpannedUntilDate is an abstraction for TotalDaysSpanned to have control
+// control over time struct. This allows tests to pass in any time value for easier
+// testing.
+func totalDaysSpannedUntilDate(now time.Time) (int, error) {
+	bsDate := ToBS(now)
 
 	days, ok := bsDaysInMonthsByYear[bsDate.year]
 	if !ok {
@@ -153,6 +149,12 @@ func TotalDaysSpanned() (int, error) {
 	}
 
 	return sum, nil
+}
+
+// TotalDaysSpanned returns the total number of days spanned in the
+// current year inclusive of the current day.
+func TotalDaysSpanned() (int, error) {
+	return totalDaysSpannedUntilDate(time.Now())
 }
 
 // toTime creates a new time.Time with the basic yy/mm/dd parameters.

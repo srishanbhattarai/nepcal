@@ -278,7 +278,7 @@ func TestMonthStartsAtDay(t *testing.T) {
 	}
 }
 
-func TestTotalDaysSpanned(t *testing.T) {
+func TestTotalDaysSpannedUntilDate(t *testing.T) {
 	tests := []struct {
 		name     string
 		date     time.Time
@@ -296,16 +296,15 @@ func TestTotalDaysSpanned(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			now = func() time.Time { return test.date }
-			total, err := TotalDaysSpanned()
+			total, err := totalDaysSpannedUntilDate(test.date)
 
 			assert.Equal(t, test.expected, total, err)
 		})
 	}
 
 	t.Run("errors if BS year is out of range", func(t *testing.T) {
-		now = func() time.Time { return toTime(3050, 06, 15) }
-		_, err := TotalDaysSpanned()
+		date := toTime(3050, 06, 15)
+		_, err := totalDaysSpannedUntilDate(date)
 
 		if assert.Error(t, err) {
 			assert.Equal(t, fmt.Errorf("Year should be in between %d and %d", bsLBound, bsUBound), err)
