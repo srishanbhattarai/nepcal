@@ -231,13 +231,12 @@ func TestTotalDaysInBSYear(t *testing.T) {
 	})
 }
 
-// Test the 'MonthStartsAtDay' function.
 func TestMonthStartsAtDay(t *testing.T) {
 	var fixtures = map[string]time.Time{
-		"May17":  time.Date(2018, time.May, 17, 0, 0, 0, 0, time.UTC),
-		"May19":  time.Date(2018, time.May, 19, 0, 0, 0, 0, time.UTC),
-		"May26":  time.Date(2018, time.May, 26, 0, 0, 0, 0, time.UTC),
-		"June15": time.Date(2018, time.June, 15, 0, 0, 0, 0, time.UTC),
+		"May_17_2018":  time.Date(2018, time.May, 17, 0, 0, 0, 0, time.UTC),
+		"May_19_2018":  time.Date(2018, time.May, 19, 0, 0, 0, 0, time.UTC),
+		"May_26_2018":  time.Date(2018, time.May, 26, 0, 0, 0, 0, time.UTC),
+		"June_15_2018": time.Date(2018, time.June, 15, 0, 0, 0, 0, time.UTC),
 	}
 
 	tests := []struct {
@@ -248,26 +247,26 @@ func TestMonthStartsAtDay(t *testing.T) {
 	}{
 		{
 			"less than 7",
-			fixtures["May17"],
-			ToBS(fixtures["May17"]),
+			fixtures["May_17_2018"],
+			ToBS(fixtures["May_17_2018"]),
 			2,
 		},
 		{
 			"less than 7",
-			fixtures["May19"],
-			ToBS(fixtures["May19"]),
+			fixtures["May_19_2018"],
+			ToBS(fixtures["May_19_2018"]),
 			2,
 		},
 		{
 			"less than 7",
-			fixtures["June15"],
-			ToBS(fixtures["June15"]),
+			fixtures["June_15_2018"],
+			ToBS(fixtures["June_15_2018"]),
 			5,
 		},
 		{
 			"more than 7",
-			fixtures["May26"],
-			ToBS(fixtures["May26"]),
+			fixtures["May_26_2018"],
+			ToBS(fixtures["May_26_2018"]),
 			2,
 		},
 	}
@@ -277,4 +276,38 @@ func TestMonthStartsAtDay(t *testing.T) {
 			assert.Equal(t, test.expected, test.bsDate.MonthStartsAtDay(test.adDate))
 		})
 	}
+}
+
+func TestTotalDaysSpannedUntilDate(t *testing.T) {
+	tests := []struct {
+		name     string
+		date     time.Time
+		expected int
+	}{
+		{"June_13_2018", toTime(2018, 8, 03), 112},
+		{"June_13_2019", toTime(2019, 8, 03), 112},
+		{"April_12_2020", toTime(2020, 04, 12), 365},
+		{"April_13_2020", toTime(2020, 04, 13), 1},
+		{"April_14_2020", toTime(2020, 04, 14), 2},
+		{"April_13_2021", toTime(2021, 04, 13), 366},
+		{"April_14_2021", toTime(2021, 04, 14), 1},
+		{"April_15_2021", toTime(2021, 04, 15), 2},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			total, err := totalDaysSpannedUntilDate(test.date)
+
+			assert.Equal(t, test.expected, total, err)
+		})
+	}
+
+	t.Run("errors if BS year is out of range", func(t *testing.T) {
+		date := toTime(3050, 06, 15)
+		_, err := totalDaysSpannedUntilDate(date)
+
+		if assert.Error(t, err) {
+			assert.Equal(t, fmt.Errorf("Year should be in between %d and %d", bsLBound, bsUBound), err)
+		}
+	})
 }
