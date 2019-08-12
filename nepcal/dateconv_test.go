@@ -1,4 +1,4 @@
-package dateconv
+package nepcal
 
 import (
 	"fmt"
@@ -21,61 +21,67 @@ func dummyNepaliTime(yy int, mm int, dd int) time.Time {
 }
 
 func TestToBS(t *testing.T) {
+	// TODO: Remove dummy time.Now()
 	tests := []struct {
 		name   string
 		input  time.Time
-		output BSDate
+		output Time
 	}{
 		{
 			"case1",
 			toTime(2018, 04, 01),
-			newBSDate(2074, 12, 18),
+			Time{2074, 12, 18, time.Now()},
 		},
 		{
 			"case2",
 			toTime(1943, 04, 15),
-			newBSDate(2000, 01, 02),
+			Time{2000, 01, 02, time.Now()},
 		},
 		{
 			"case3",
 			toTime(2018, 04, 17),
-			newBSDate(2075, 01, 04),
+			Time{2075, 01, 04, time.Now()},
 		},
 		{
 			"case4",
 			toTime(2018, 05, 01),
-			newBSDate(2075, 01, 18),
+			Time{2075, 01, 18, time.Now()},
 		},
 		{
 			"case5",
 			toTime(1960, 9, 16),
-			newBSDate(2017, 06, 1),
+			Time{2017, 06, 1, time.Now()},
 		},
 		{
 			"case6",
 			toTime(2037, 9, 16),
-			newBSDate(-1, -1, -1),
+			Time{-1, -1, -1, time.Now()},
 		},
 		{
 			"case7",
 			toTime(2019, 06, 15),
-			newBSDate(2076, 02, 32),
+			Time{2076, 02, 32, time.Now()},
 		},
 		{
 			"case8",
 			toTime(2019, 06, 13),
-			newBSDate(2076, 02, 30),
+			Time{2076, 02, 30, time.Now()},
 		},
 		{
 			"case9",
 			dummyNepaliTime(2019, 05, 05),
-			newBSDate(2076, 01, 22),
+			Time{2076, 01, 22, time.Now()},
 		},
 	}
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			assert.Equal(t, test.output, ToBS(test.input))
+			bs := ToBS(test.input)
+
+			// TODO: Add assertion for time.Time field.
+			assert.Equal(t, test.output.year, bs.year)
+			assert.Equal(t, test.output.month, bs.month)
+			assert.Equal(t, test.output.day, bs.day)
 		})
 	}
 
@@ -137,44 +143,40 @@ func TestAdDaysInMonths(t *testing.T) {
 	}
 }
 
-func TestGetBSMonthName(t *testing.T) {
+func TestMonthString(t *testing.T) {
 	tests := []struct {
-		name         string
-		month        time.Month
-		expectedStr  string
-		expectedBool bool
+		name        string
+		month       Month
+		expectedStr string
 	}{
-		{"when in range", time.Month(1), "बैशाख", true},
-		{"when not in range", time.Month(100), "", false},
+		{"when in range", Month(1), "बैशाख"},
+		{"when not in range", Month(100), ""},
 	}
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			mth, ok := GetBSMonthName(test.month)
+			mth := test.month.String()
 
 			assert.Equal(t, test.expectedStr, mth)
-			assert.Equal(t, test.expectedBool, ok)
 		})
 	}
 }
 
-func TestGetNepWeekday(t *testing.T) {
+func TestWeekdayString(t *testing.T) {
 	tests := []struct {
-		name         string
-		weekday      time.Weekday
-		expectedStr  string
-		expectedBool bool
+		name        string
+		weekday     Weekday
+		expectedStr string
 	}{
-		{"when in range", time.Weekday(0), "आइतबार", true},
-		{"when not in range", time.Weekday(7), "", false},
+		{"when in range", Weekday(0), "आइतबार"},
+		{"when not in range", Weekday(7), ""},
 	}
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			mth, ok := GetNepWeekday(test.weekday)
+			wd := test.weekday.String()
 
-			assert.Equal(t, test.expectedStr, mth)
-			assert.Equal(t, test.expectedBool, ok)
+			assert.Equal(t, test.expectedStr, wd)
 		})
 	}
 }
@@ -183,15 +185,15 @@ func TestBsDaysInMonthsByYear(t *testing.T) {
 	tests := []struct {
 		name         string
 		year         int
-		month        time.Month
+		month        Month
 		expected     int
 		expectedBool bool
 	}{
-		{"when in range", bsLBound, time.Month(1), 30, true},
-		{"when year not in range", bsUBound + 1, time.Month(1), 0, false},
-		{"when year not in range", bsLBound - 1, time.Month(1), 0, false},
-		{"when query month exceeds 12", bsUBound, time.Month(13), 0, false},
-		{"when query month is less than 1", bsUBound, time.Month(-1), 0, false},
+		{"when in range", bsLBound, Month(1), 30, true},
+		{"when year not in range", bsUBound + 1, Month(1), 0, false},
+		{"when year not in range", bsLBound - 1, Month(1), 0, false},
+		{"when query month exceeds 12", bsUBound, Month(13), 0, false},
+		{"when query month is less than 1", bsUBound, Month(-1), 0, false},
 	}
 
 	for _, test := range tests {
@@ -231,7 +233,7 @@ func TestTotalDaysInBSYear(t *testing.T) {
 	})
 }
 
-func TestMonthStartsAtDay(t *testing.T) {
+func TestStartingWeekdayOfMonth(t *testing.T) {
 	var fixtures = map[string]time.Time{
 		"May_17_2018":  time.Date(2018, time.May, 17, 0, 0, 0, 0, time.UTC),
 		"May_19_2018":  time.Date(2018, time.May, 19, 0, 0, 0, 0, time.UTC),
@@ -241,31 +243,26 @@ func TestMonthStartsAtDay(t *testing.T) {
 
 	tests := []struct {
 		name     string
-		adDate   time.Time
-		bsDate   BSDate
+		bsDate   Time
 		expected int
 	}{
 		{
 			"less than 7",
-			fixtures["May_17_2018"],
 			ToBS(fixtures["May_17_2018"]),
 			2,
 		},
 		{
 			"less than 7",
-			fixtures["May_19_2018"],
 			ToBS(fixtures["May_19_2018"]),
 			2,
 		},
 		{
 			"less than 7",
-			fixtures["June_15_2018"],
 			ToBS(fixtures["June_15_2018"]),
 			5,
 		},
 		{
 			"more than 7",
-			fixtures["May_26_2018"],
 			ToBS(fixtures["May_26_2018"]),
 			2,
 		},
@@ -273,7 +270,7 @@ func TestMonthStartsAtDay(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			assert.Equal(t, test.expected, test.bsDate.MonthStartsAtDay(test.adDate))
+			assert.Equal(t, test.expected, int(test.bsDate.StartingWeekdayOfMonth()))
 		})
 	}
 }
@@ -296,18 +293,10 @@ func TestTotalDaysSpannedUntilDate(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			total, err := totalDaysSpannedUntilDate(test.date)
+			bsDate := ToBS(test.date)
+			total := bsDate.TotalDaysSpanned()
 
-			assert.Equal(t, test.expected, total, err)
+			assert.Equal(t, test.expected, total)
 		})
 	}
-
-	t.Run("errors if BS year is out of range", func(t *testing.T) {
-		date := toTime(3050, 06, 15)
-		_, err := totalDaysSpannedUntilDate(date)
-
-		if assert.Error(t, err) {
-			assert.Equal(t, fmt.Errorf("Year should be in between %d and %d", bsLBound, bsUBound), err)
-		}
-	})
 }

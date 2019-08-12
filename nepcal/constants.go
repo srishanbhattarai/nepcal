@@ -1,59 +1,59 @@
-package dateconv
+package nepcal
 
 import "time"
 
 // The list of months in the B.S. system.
 const (
-	baisakh = iota + 1
-	jestha
-	ashar
-	shrawan
-	bhadra
-	ashoj
-	kartik
-	mangshir
-	poush
-	magh
-	falgun
-	chaitra
+	Baisakh Month = iota + 1
+	Jestha
+	Ashar
+	Shrawan
+	Bhadra
+	Ashoj
+	Kartik
+	Mangshir
+	Poush
+	Magh
+	Falgun
+	Chaitra
 )
+
+// nepMonths is a map to get each month's name in the Nepali language.
+var nepMonths = map[Month]string{
+	Baisakh:  "बैशाख",
+	Jestha:   "जेठ",
+	Ashar:    "असार",
+	Shrawan:  "साउन",
+	Bhadra:   "भदौ",
+	Ashoj:    "असोज",
+	Kartik:   "कार्तिक",
+	Mangshir: "मंसिर",
+	Poush:    "पौष",
+	Magh:     "माघ",
+	Falgun:   "फागुन",
+	Chaitra:  "चैत",
+}
 
 // The list of weekdays in Nepali.
 const (
-	sunday = iota
-	monday
-	tuesday
-	wednesday
-	thursday
-	friday
-	saturday
+	Sunday Weekday = iota
+	Monday
+	Tuesday
+	Wednesday
+	Thursday
+	Friday
+	Saturday
 )
 
-// bsMonths is a map to get each month's name in the Nepali language.
-var bsMonths = map[int]string{
-	baisakh:  "बैशाख",
-	jestha:   "जेठ",
-	ashar:    "असार",
-	shrawan:  "साउन",
-	bhadra:   "भदौ",
-	ashoj:    "असोज",
-	kartik:   "कार्तिक",
-	mangshir: "मंसिर",
-	poush:    "पौष",
-	magh:     "माघ",
-	falgun:   "फागुन",
-	chaitra:  "चैत",
-}
-
 // nepWeekdays is a map to get each weekday in Nepali language.
-var nepWeekdays = map[int]string{
-	sunday:    "आइतबार",
-	monday:    "सोमबार",
-	tuesday:   "मंगलबार",
-	wednesday: "बुधबार",
-	thursday:  "बिहिबार",
-	friday:    "शुक्रबार",
-	saturday:  "शनिबार",
+var nepWeekdays = map[Weekday]string{
+	Sunday:    "आइतबार",
+	Monday:    "सोमबार",
+	Tuesday:   "मंगलबार",
+	Wednesday: "बुधबार",
+	Thursday:  "बिहिबार",
+	Friday:    "शुक्रबार",
+	Saturday:  "शनिबार",
 }
 
 // Lower and Upper bounds for AD and BS years along with diffs for
