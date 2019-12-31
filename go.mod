@@ -6,3 +6,5 @@ require (
 	github.com/stretchr/testify v1.3.0
 	github.com/urfave/cli v1.21.0
 )
+
+go 1.13

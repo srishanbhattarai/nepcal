@@ -18,10 +18,6 @@ const versionNumber = "0.4.0"
 // Cheap testing.
 var writer io.Writer = os.Stdout
 
-func init() {
-	flag.Parse()
-}
-
 func main() {
 	runCli()
 }
@@ -33,6 +29,7 @@ func runCli() {
 }
 
 func bootstrapCli() *cli.App {
+	flag.Parse()
 	nc := nepcalCli{}
 
 	app := cli.NewApp()
