@@ -5,6 +5,7 @@ import (
 	"io"
 	"time"
 
+	"github.com/srishanbhattarai/nepcal/dateconv"
 	"github.com/urfave/cli"
 )
 
@@ -21,35 +22,45 @@ func (nepcalCli) showCalendar(c *cli.Context) {
 // Shows the date for the provided time. Returns a cli 'action'.
 func (nepcalCli) showDate(w io.Writer, t time.Time) func(c *cli.Context) {
 	return func(c *cli.Context) {
-		showDate(w, t)
+		showDateBS(w, dateconv.ToBS(t), t.Weekday())
 	}
 }
 
 // Convert AD date to BS date after validation.
 func (nepcalCli) convADToBS(c *cli.Context) {
-	areArgsValid := func() bool {
-		if c.NArg() < 1 {
-			return false
-		}
-
-		_, _, _, ok := parseRawDate(c.Args().First())
-		if !ok {
-			return false
-		}
-
-		return true
-	}()
-
-	if !areArgsValid {
+	if !validateArgs(c) {
 		fmt.Println("Please supply a valid date in the format mm-dd-yyyy. Example: `nepcal conv adtobs 08-21-1994`")
 		return
 	}
 
 	mm, dd, yy, _ := parseRawDate(c.Args().First())
-	showDate(writer, time.Date(yy, time.Month(mm), dd, 0, 0, 0, 0, time.UTC))
+	adDate := toTime(yy, time.Month(mm), dd)
+	bsDate := dateconv.ToBS(adDate)
+
+	showDateBS(writer, bsDate, adDate.Weekday())
 }
 
-// Not supported yet.
+// Convert BS date to AD date after validation.
 func (nepcalCli) convBSToAD(c *cli.Context) {
-	fmt.Fprintln(writer, "Unfortunately BS to AD isn't supported at this time. :(")
+	if !validateArgs(c) {
+		fmt.Println("Please supply a valid date in the format mm-dd-yyyy. Example: `nepcal conv bstoad 08-18-2053`")
+		return
+	}
+
+	mm, dd, yy, _ := parseRawDate(c.Args().First())
+	adyy, admm, addd := dateconv.ToAD(dateconv.NewBSDate(yy, mm, dd)).Date()
+	date := toTime(adyy, time.Month(admm), addd)
+
+	showDateAD(writer, date)
+}
+
+// Validates the arguments provided to the program.
+func validateArgs(c *cli.Context) bool {
+	if c.NArg() < 1 {
+		return false
+	}
+
+	_, _, _, ok := parseRawDate(c.Args().First())
+
+	return ok
 }
