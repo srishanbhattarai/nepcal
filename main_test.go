@@ -5,10 +5,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/srishanbhattarai/nepcal/dateconv"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestShowDate(t *testing.T) {
+func TestShowDateBS(t *testing.T) {
 	b := bytes.NewBuffer([]byte(""))
 
 	tests := []struct {
@@ -25,7 +26,30 @@ func TestShowDate(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			showDate(b, test.t)
+			showDateBS(b, dateconv.ToBS(test.t), test.t.Weekday())
+			assert.Equal(t, test.expected, b.String())
+		})
+	}
+}
+
+func TestShowDateAD(t *testing.T) {
+	b := bytes.NewBuffer([]byte(""))
+
+	tests := []struct {
+		name     string
+		t        dateconv.BSDate
+		expected string
+	}{
+		{
+			"case-1",
+			dateconv.NewBSDate(2053, 8, 18),
+			"December 3, 1996 Tuesday\n",
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			showDateAD(b, dateconv.ToAD(test.t))
 			assert.Equal(t, test.expected, b.String())
 		})
 	}

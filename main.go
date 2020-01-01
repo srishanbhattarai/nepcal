@@ -100,13 +100,21 @@ func parseRawDate(rawDate string) (int, int, int, bool) {
 	return mm, dd, yy, true
 }
 
-// showDate prints the current B.S. date
-func showDate(w io.Writer, t time.Time) {
-	yy, mm, dd := t.Date()
+func showDateAD(w io.Writer, t time.Time) {
+	adyy, _, addd := t.Date()
 
-	bsyy, bsmm, bsdd := dateconv.ToBS(toTime(yy, mm, dd)).Date()
+	month := t.Month().String()
+	weekday := t.Weekday()
+
+	fmt.Fprintf(w, "%s %d, %d %s\n", month, addd, adyy, weekday)
+}
+
+// showDate prints the current B.S. date
+func showDateBS(w io.Writer, bs dateconv.BSDate, wd time.Weekday) {
+	bsyy, bsmm, bsdd := bs.Date()
+
 	month, monthOk := dateconv.GetBSMonthName(time.Month(bsmm))
-	weekday, weekdayOk := dateconv.GetNepWeekday(t.Weekday())
+	weekday, weekdayOk := dateconv.GetNepWeekday(wd)
 
 	if monthOk && weekdayOk {
 		fmt.Fprintf(w, "%s %d, %d %s\n", month, bsdd, bsyy, weekday)

@@ -39,8 +39,16 @@ func (b BSDate) MonthStartsAtDay(ad time.Time) int {
 	return int(d)
 }
 
-// newBSDate is a constructor for a new Bikram Sambat date.
-func newBSDate(yy, mm, dd int) BSDate {
+// After reports whether the BS date b is after u.
+func (b BSDate) After(u BSDate) bool {
+	dateA := fmt.Sprintf("%d-%02d-%02d", b.year, b.month, b.days)
+	dateB := fmt.Sprintf("%d-%02d-%02d", u.year, u.month, u.days)
+
+	return dateA > dateB
+}
+
+// NewBSDate is a constructor for a new Bikram Sambat date.
+func NewBSDate(yy, mm, dd int) BSDate {
 	return BSDate{yy, mm, dd}
 }
 
@@ -62,7 +70,7 @@ func ToBS(adDate time.Time) BSDate {
 
 	// Redistribute the diff along the BS data grid
 	year, month, days := func() (int, int, int) {
-		for i := bsLBound; i < bsUBound; i++ {
+		for i := bsLBoundY; i < bsUBoundY; i++ {
 			for j := 0; j < 12; j++ {
 				days := bsDaysInMonthsByYear[i][j]
 
@@ -78,7 +86,47 @@ func ToBS(adDate time.Time) BSDate {
 		return -1, -1, -1
 	}()
 
-	return newBSDate(year, month, days)
+	return NewBSDate(year, month, days)
+}
+
+// ToAD handles conversion of a Nepali date format - Bikram Sambat (B.S)
+// into the Anno Domini (A.D) date.The approximate difference is
+// 56 years, 8 months.
+func ToAD(bsDate BSDate) time.Time {
+	adLBound := toTime(adLBoundY, adLBoundM, adLBoundD)
+	bsLBound := NewBSDate(bsLBoundY, bsLBoundM, bsLBoundD)
+
+	bsYear, bsMonth, bsDay := bsDate.Date()
+
+	if !bsDate.After(bsLBound) {
+		panic("Can only work with dates after 2000 Baisakh 1.")
+	}
+
+	year, month, day := func() (int, time.Month, int) {
+		totalDiff := 0
+
+		// Count the number of days in the years
+		for i := bsLBoundY; i < bsYear; i++ {
+			days, err := TotalDaysInBSYear(i)
+			if err != nil {
+				panic(err)
+			}
+
+			totalDiff += days
+		}
+
+		// Count the number of days in the months
+		for i := 0; i < int(bsMonth)-1; i++ {
+			totalDiff += bsDaysInMonthsByYear[bsYear][i]
+		}
+
+		// Add the leftover days
+		totalDiff += bsDay - 1
+
+		return adLBound.AddDate(0, 0, totalDiff).Date()
+	}()
+
+	return toTime(year, int(month), day)
 }
 
 // GetBSMonthName returns the B.S. month name from the time.Month type.
@@ -121,7 +169,7 @@ func BsDaysInMonthsByYear(yy int, mm time.Month) (int, bool) {
 func TotalDaysInBSYear(year int) (int, error) {
 	days, ok := bsDaysInMonthsByYear[year]
 	if !ok {
-		return -1, fmt.Errorf("Year should be in between %d and %d", bsLBound, bsUBound)
+		return -1, fmt.Errorf("Year should be in between %d and %d", bsLBoundY, bsUBoundY)
 	}
 
 	sum := 0
@@ -140,7 +188,7 @@ func totalDaysSpannedUntilDate(now time.Time) (int, error) {
 
 	days, ok := bsDaysInMonthsByYear[bsDate.year]
 	if !ok {
-		return -1, fmt.Errorf("Year should be in between %d and %d", bsLBound, bsUBound)
+		return -1, fmt.Errorf("Year should be in between %d and %d", bsLBoundY, bsUBoundY)
 	}
 
 	sum := bsDate.days

@@ -11,7 +11,7 @@ Complete instructions on how to use each of these features are mentioned below.
 * [x] Show the current Nepali month's calendar
 * [x] Show today's Nepali date and day
 * [x] Convert an A.D. date into B.S.
-* [ ] Convert an B.S. date into A.D.
+* [x] Convert an B.S. date into A.D.
 
 ## Installation
 

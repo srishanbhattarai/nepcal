@@ -29,47 +29,47 @@ func TestToBS(t *testing.T) {
 		{
 			"case1",
 			toTime(2018, 04, 01),
-			newBSDate(2074, 12, 18),
+			NewBSDate(2074, 12, 18),
 		},
 		{
 			"case2",
 			toTime(1943, 04, 15),
-			newBSDate(2000, 01, 02),
+			NewBSDate(2000, 01, 02),
 		},
 		{
 			"case3",
 			toTime(2018, 04, 17),
-			newBSDate(2075, 01, 04),
+			NewBSDate(2075, 01, 04),
 		},
 		{
 			"case4",
 			toTime(2018, 05, 01),
-			newBSDate(2075, 01, 18),
+			NewBSDate(2075, 01, 18),
 		},
 		{
 			"case5",
 			toTime(1960, 9, 16),
-			newBSDate(2017, 06, 1),
+			NewBSDate(2017, 06, 1),
 		},
 		{
 			"case6",
 			toTime(2037, 9, 16),
-			newBSDate(-1, -1, -1),
+			NewBSDate(-1, -1, -1),
 		},
 		{
 			"case7",
 			toTime(2019, 06, 15),
-			newBSDate(2076, 02, 32),
+			NewBSDate(2076, 02, 32),
 		},
 		{
 			"case8",
 			toTime(2019, 06, 13),
-			newBSDate(2076, 02, 30),
+			NewBSDate(2076, 02, 30),
 		},
 		{
 			"case9",
 			dummyNepaliTime(2019, 05, 05),
-			newBSDate(2076, 01, 22),
+			NewBSDate(2076, 01, 22),
 		},
 	}
 
@@ -86,6 +86,66 @@ func TestToBS(t *testing.T) {
 	})
 }
 
+func TestToAD(t *testing.T) {
+	tests := []struct {
+		name   string
+		input  BSDate
+		output time.Time
+	}{
+		{
+			"case1",
+			NewBSDate(2074, 12, 18),
+			toTime(2018, 04, 01),
+		},
+		{
+			"case2",
+			NewBSDate(2000, 01, 02),
+			toTime(1943, 04, 15),
+		},
+		{
+			"case3",
+			NewBSDate(2075, 01, 04),
+			toTime(2018, 04, 17),
+		},
+		{
+			"case4",
+			NewBSDate(2075, 01, 18),
+			toTime(2018, 05, 01),
+		},
+		{
+			"case5",
+			NewBSDate(2017, 06, 1),
+			toTime(1960, 9, 16),
+		},
+		{
+			"case6",
+			NewBSDate(2076, 02, 32),
+			toTime(2019, 06, 15),
+		},
+		{
+			"case7",
+			NewBSDate(2076, 02, 30),
+			toTime(2019, 06, 13),
+		},
+		{
+			"case8",
+			NewBSDate(2076, 01, 22),
+			toTime(2019, 05, 05),
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			assert.Equal(t, test.output, ToAD(test.input))
+		})
+	}
+
+	t.Run("panics if date is before 2000 Baisakh 1", func(t *testing.T) {
+		assert.Panics(t, func() {
+			ToAD(NewBSDate(1999, 04, 01)) // april 1
+		}, "Can only work with dates after 2000 Baisakh 1")
+	})
+}
 func TestIsLeapYear(t *testing.T) {
 	tests := []struct {
 		name     string
@@ -187,11 +247,11 @@ func TestBsDaysInMonthsByYear(t *testing.T) {
 		expected     int
 		expectedBool bool
 	}{
-		{"when in range", bsLBound, time.Month(1), 30, true},
-		{"when year not in range", bsUBound + 1, time.Month(1), 0, false},
-		{"when year not in range", bsLBound - 1, time.Month(1), 0, false},
-		{"when query month exceeds 12", bsUBound, time.Month(13), 0, false},
-		{"when query month is less than 1", bsUBound, time.Month(-1), 0, false},
+		{"when in range", bsLBoundY, time.Month(1), 30, true},
+		{"when year not in range", bsUBoundY + 1, time.Month(1), 0, false},
+		{"when year not in range", bsLBoundY - 1, time.Month(1), 0, false},
+		{"when query month exceeds 12", bsUBoundY, time.Month(13), 0, false},
+		{"when query month is less than 1", bsUBoundY, time.Month(-1), 0, false},
 	}
 
 	for _, test := range tests {
@@ -200,6 +260,26 @@ func TestBsDaysInMonthsByYear(t *testing.T) {
 
 			assert.Equal(t, test.expected, days)
 			assert.Equal(t, test.expectedBool, ok)
+		})
+	}
+}
+
+func TestBSAfter(t *testing.T) {
+	tests := []struct {
+		name     string
+		dateA    BSDate
+		dateB    BSDate
+		expected bool
+	}{
+		{"date A after date B", NewBSDate(2050, 10, 10), NewBSDate(2020, 11, 11), true},
+		{"date A before date B", NewBSDate(2020, 10, 10), NewBSDate(2050, 11, 11), false},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			isAfter := test.dateA.After(test.dateB)
+
+			assert.Equal(t, test.expected, isAfter)
 		})
 	}
 }
@@ -226,7 +306,7 @@ func TestTotalDaysInBSYear(t *testing.T) {
 		_, err := TotalDaysInBSYear(3050)
 
 		if assert.Error(t, err) {
-			assert.Equal(t, fmt.Errorf("Year should be in between %d and %d", bsLBound, bsUBound), err)
+			assert.Equal(t, fmt.Errorf("Year should be in between %d and %d", bsLBoundY, bsUBoundY), err)
 		}
 	})
 }
@@ -307,7 +387,7 @@ func TestTotalDaysSpannedUntilDate(t *testing.T) {
 		_, err := totalDaysSpannedUntilDate(date)
 
 		if assert.Error(t, err) {
-			assert.Equal(t, fmt.Errorf("Year should be in between %d and %d", bsLBound, bsUBound), err)
+			assert.Equal(t, fmt.Errorf("Year should be in between %d and %d", bsLBoundY, bsUBoundY), err)
 		}
 	})
 }
