@@ -83,6 +83,16 @@ $ nepcal conv adtobs 08-21-1994
 भदौ 5, 2051 आइतबार
 ```
 
+### Convert B.S. date to A.D.
+
+Use the `mm-dd-yyyy` format when converting B.S. to A.D.
+
+```
+$ nepcal conv bstoad 18-08-2053
+
+December 3, 1996 Tuesday
+```
+
 ## Contributing
 
 Please file an issue if you have any problems with `nepcal` or, have a look at the issues page for contributing on existing issues. Also, read the [code of conduct](https://github.com/srishanbhattarai/nepcal/blob/master/CODE_OF_CONDUCT.md).

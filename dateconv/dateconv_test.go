@@ -391,3 +391,41 @@ func TestTotalDaysSpannedUntilDate(t *testing.T) {
 		}
 	})
 }
+
+func TestCheckBoundsBS(t *testing.T) {
+	tests := []struct {
+		name     string
+		date     BSDate
+		expected error
+	}{
+		{"within bounds", NewBSDate(2053, 12, 30), nil},
+		{"out of bounds", NewBSDate(1999, 1, 1), fmt.Errorf("Error: can only work with dates after 2000 Baisakh 1")},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			err := test.date.CheckBounds()
+
+			assert.Equal(t, test.expected, err)
+		})
+	}
+}
+
+func TestCheckBoundsAD(t *testing.T) {
+	tests := []struct {
+		name     string
+		date     time.Time
+		expected error
+	}{
+		{"within bounds", toTime(2053, 12, 30), nil},
+		{"out of bounds", toTime(1910, 1, 1), fmt.Errorf("Error: can only work with dates after 1943 April 14")},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			err := CheckBoundsAD(test.date)
+
+			assert.Equal(t, test.expected, err)
+		})
+	}
+}
