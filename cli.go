@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"os"
 	"time"
 
 	"github.com/srishanbhattarai/nepcal/dateconv"
@@ -29,12 +30,17 @@ func (nepcalCli) showDate(w io.Writer, t time.Time) func(c *cli.Context) {
 // Convert AD date to BS date after validation.
 func (nepcalCli) convADToBS(c *cli.Context) {
 	if !validateArgs(c) {
-		fmt.Println("Please supply a valid date in the format mm-dd-yyyy. Example: `nepcal conv adtobs 08-21-1994`")
+		fmt.Fprintln(os.Stderr, "Please supply a valid date in the format mm-dd-yyyy. Example: `nepcal conv adtobs 08-21-1994`")
 		return
 	}
 
 	mm, dd, yy, _ := parseRawDate(c.Args().First())
 	adDate := toTime(yy, time.Month(mm), dd)
+	if err := dateconv.CheckBoundsAD(adDate); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return
+	}
+
 	bsDate := dateconv.ToBS(adDate)
 
 	showDateBS(writer, bsDate, adDate.Weekday())
@@ -43,11 +49,17 @@ func (nepcalCli) convADToBS(c *cli.Context) {
 // Convert BS date to AD date after validation.
 func (nepcalCli) convBSToAD(c *cli.Context) {
 	if !validateArgs(c) {
-		fmt.Println("Please supply a valid date in the format mm-dd-yyyy. Example: `nepcal conv bstoad 08-18-2053`")
+		fmt.Fprintln(os.Stderr, "Please supply a valid date in the format mm-dd-yyyy. Example: `nepcal conv bstoad 08-18-2053`")
 		return
 	}
 
 	mm, dd, yy, _ := parseRawDate(c.Args().First())
+	bsdate := dateconv.NewBSDate(yy, mm, dd)
+	if err := bsdate.CheckBounds(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return
+	}
+
 	adyy, admm, addd := dateconv.ToAD(dateconv.NewBSDate(yy, mm, dd)).Date()
 	date := toTime(adyy, time.Month(admm), addd)
 

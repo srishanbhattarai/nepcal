@@ -47,6 +47,30 @@ func (b BSDate) After(u BSDate) bool {
 	return dateA > dateB
 }
 
+// CheckBounds checks if the conversion is possible. Raises an error is an out
+// of bound input is provided. Date after 2000 Baisakh 1 should be provided.
+func (b BSDate) CheckBounds() error {
+	bsLBound := NewBSDate(bsLBoundY, bsLBoundM, bsLBoundD)
+
+	if !b.After(bsLBound) {
+		return fmt.Errorf("Error: can only work with dates after 2000 Baisakh 1")
+	}
+
+	return nil
+}
+
+// CheckBoundsAD checks if the conversion is possible. Raises an error is an
+// out of bound input is provided. Date after 1943 April 14 should be provided.
+func CheckBoundsAD(adDate time.Time) error {
+	adLBound := toTime(adLBoundY, adLBoundM, adLBoundD)
+
+	if !adDate.After(adLBound) {
+		return fmt.Errorf("Error: can only work with dates after 1943 April 14")
+	}
+
+	return nil
+}
+
 // NewBSDate is a constructor for a new Bikram Sambat date.
 func NewBSDate(yy, mm, dd int) BSDate {
 	return BSDate{yy, mm, dd}
@@ -62,8 +86,8 @@ func ToBS(adDate time.Time) BSDate {
 	adYear, adMonth, adDay := adDate.Date()
 	adDateUTC := toTime(adYear, int(adMonth), adDay)
 
-	if !adDate.After(adLBound) {
-		panic("Can only work with dates after 1943 April 14.")
+	if err := CheckBoundsAD(adDate); err != nil {
+		panic(err)
 	}
 
 	totalDiff := int(adDateUTC.Sub(adLBound).Hours() / 24)
@@ -94,12 +118,10 @@ func ToBS(adDate time.Time) BSDate {
 // 56 years, 8 months.
 func ToAD(bsDate BSDate) time.Time {
 	adLBound := toTime(adLBoundY, adLBoundM, adLBoundD)
-	bsLBound := NewBSDate(bsLBoundY, bsLBoundM, bsLBoundD)
-
 	bsYear, bsMonth, bsDay := bsDate.Date()
 
-	if !bsDate.After(bsLBound) {
-		panic("Can only work with dates after 2000 Baisakh 1.")
+	if err := bsDate.CheckBounds(); err != nil {
+		panic(err)
 	}
 
 	year, month, day := func() (int, time.Month, int) {
