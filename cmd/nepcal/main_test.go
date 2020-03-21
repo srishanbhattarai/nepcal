@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/srishanbhattarai/nepcal/dateconv"
+	dateconv "github.com/srishanbhattarai/nepcal/time"
 	"github.com/stretchr/testify/assert"
 )
 
