@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/srishanbhattarai/nepcal/dateconv"
+	dateconv "github.com/srishanbhattarai/nepcal/time"
 	"github.com/urfave/cli"
 )
 
