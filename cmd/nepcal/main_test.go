@@ -2,10 +2,11 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"testing"
 	"time"
 
-	"github.com/srishanbhattarai/nepcal/dateconv"
+	"github.com/srishanbhattarai/nepcal/nepcal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -26,7 +27,8 @@ func TestShowDateBS(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			showDateBS(b, dateconv.ToBS(test.t), test.t.Weekday())
+			fmt.Fprintf(b, "%s\n", nepcal.FromGregorianUnchecked(test.t).String())
+
 			assert.Equal(t, test.expected, b.String())
 		})
 	}
@@ -37,19 +39,19 @@ func TestShowDateAD(t *testing.T) {
 
 	tests := []struct {
 		name     string
-		t        dateconv.BSDate
+		t        nepcal.Time
 		expected string
 	}{
 		{
 			"case-1",
-			dateconv.NewBSDate(2053, 8, 18),
+			nepcal.DateUnchecked(2053, 8, 18),
 			"December 3, 1996 Tuesday\n",
 		},
 	}
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			showDateAD(b, dateconv.ToAD(test.t))
+			printGregorian(b, test.t.Gregorian())
 			assert.Equal(t, test.expected, b.String())
 		})
 	}

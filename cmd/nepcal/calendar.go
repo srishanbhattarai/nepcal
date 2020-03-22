@@ -6,7 +6,7 @@ import (
 	"text/tabwriter"
 	"time"
 
-	"github.com/srishanbhattarai/nepcal/dateconv"
+	"github.com/srishanbhattarai/nepcal/nepcal"
 )
 
 // calendar struct represents the state required to render the B.S. calendar using a tabwriter
@@ -31,11 +31,11 @@ func newCalendar(w io.Writer) *calendar {
 // standard library. It doesn't support ANSI escapes so we cant have
 // color/other enhancements to the output.(https://github.com/srishanbhattarai/nepcal/issues/4)
 func (c *calendar) Render(ad time.Time) {
-	bs := dateconv.ToBS(ad)
+	bs := nepcal.FromGregorianUnchecked(ad)
 
 	c.renderBSDateHeader(bs)
 	c.renderStaticDaysHeader()
-	c.renderFirstRow(ad, bs)
+	c.renderFirstRow(bs)
 	c.renderCalWithoutFirstRow(bs)
 
 	c.w.Flush()
@@ -45,8 +45,8 @@ func (c *calendar) Render(ad time.Time) {
 // to be handled separately is because there is a offset in each month which
 // determines which day the month starts from - we need to tab space the 'offset' number
 // of days, then start printing from the day after the offset.
-func (c *calendar) renderFirstRow(ad time.Time, bs dateconv.BSDate) {
-	offset := bs.MonthStartsAtDay(ad)
+func (c *calendar) renderFirstRow(bs nepcal.Time) {
+	offset := int(bs.StartWeekday())
 	for i := 0; i < offset; i++ {
 		fmt.Fprintf(c.w, "\t")
 	}
@@ -62,14 +62,11 @@ func (c *calendar) renderFirstRow(ad time.Time, bs dateconv.BSDate) {
 // renderCalWithoutFirstRow renders the rest of the calendar without the first row.
 // renderFirstRow will handle that due to special circumstances. We basically loop over
 // each row and print 7 numbers until we are at the end of the month.
-func (c *calendar) renderCalWithoutFirstRow(bs dateconv.BSDate) {
-	daysInMonth, _ := bs.DaysInMonth() // Invariant: the month value is always valid and 'ok' is never false.
+func (c *calendar) renderCalWithoutFirstRow(bs nepcal.Time) {
+	daysInMonth := bs.NumDaysInMonth()
 
 	for c.val < daysInMonth {
-		start := daysInMonth - c.val
-		end := start + 7
-
-		for i := start; i < end; i++ {
+		for i := 0; i < 7; i++ {
 			if c.val > daysInMonth {
 				break
 			}
@@ -91,14 +88,12 @@ func (c *calendar) renderStaticDaysHeader() {
 	fmt.Fprint(c.w, "\n")
 }
 
-// renderBSDateHeader prints the date corresponding to the time e. This will
+// renderBSDateHeader prints the date corresponding to the time 't'. This will
 // be the header of the calendar.
-func (c *calendar) renderBSDateHeader(e dateconv.BSDate) {
-	yy, mm, dd := e.Date()
+func (c *calendar) renderBSDateHeader(t nepcal.Time) {
+	yy, mm, dd := t.Date()
 
-	if month, ok := dateconv.GetBSMonthName(time.Month(mm)); ok {
-		fmt.Fprintf(c.w, "\t\t%s %d, %d\n\t", month, dd, yy)
-	}
+	fmt.Fprintf(c.w, "\t\t%s %d, %d\n\t", mm.String(), dd, yy)
 }
 
 // next increments the value counter.
