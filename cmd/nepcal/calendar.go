@@ -6,7 +6,7 @@ import (
 	"text/tabwriter"
 	"time"
 
-	dateconv "github.com/srishanbhattarai/nepcal/time"
+	"github.com/srishanbhattarai/nepcal/dateconv"
 )
 
 // calendar struct represents the state required to render the B.S. calendar using a tabwriter
