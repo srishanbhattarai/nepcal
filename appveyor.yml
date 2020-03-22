@@ -12,7 +12,11 @@ install:
   - go get -t -v ./...
 
 build_script:
-  - go build .
+  # Nothing to do here; but needed to fix the following error:
+  # The build phase is set to "MSBuild" mode (default),
+  # but no Visual Studio project or solution files were found in the root directory.
+  # If you are not building Visual Studio project switch build mode to "Script" and provide your custom build command.
+  - go version
 
 test_script:
   - go test -v ./...
