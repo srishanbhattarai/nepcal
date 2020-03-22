@@ -2,60 +2,6 @@ package time
 
 import "time"
 
-// The list of months in the B.S. system.
-const (
-	baisakh = iota + 1
-	jestha
-	ashar
-	shrawan
-	bhadra
-	ashoj
-	kartik
-	mangshir
-	poush
-	magh
-	falgun
-	chaitra
-)
-
-// The list of weekdays in Nepali.
-const (
-	sunday = iota
-	monday
-	tuesday
-	wednesday
-	thursday
-	friday
-	saturday
-)
-
-// bsMonths is a map to get each month's name in the Nepali language.
-var bsMonths = map[int]string{
-	baisakh:  "बैशाख",
-	jestha:   "जेठ",
-	ashar:    "असार",
-	shrawan:  "साउन",
-	bhadra:   "भदौ",
-	ashoj:    "असोज",
-	kartik:   "कार्तिक",
-	mangshir: "मंसिर",
-	poush:    "पौष",
-	magh:     "माघ",
-	falgun:   "फागुन",
-	chaitra:  "चैत",
-}
-
-// nepWeekdays is a map to get each weekday in Nepali language.
-var nepWeekdays = map[int]string{
-	sunday:    "आइतबार",
-	monday:    "सोमबार",
-	tuesday:   "मंगलबार",
-	wednesday: "बुधबार",
-	thursday:  "बिहिबार",
-	friday:    "शुक्रबार",
-	saturday:  "शनिबार",
-}
-
 // Lower and Upper bounds for AD and BS years along with diffs for
 // month and days
 const (
