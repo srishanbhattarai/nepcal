@@ -6,6 +6,7 @@ builds:
       - linux
     goarch:
       - amd64
+    main: ./cmd/nepcal
 
 archive:
   format: tar.gz
