@@ -65,7 +65,7 @@ func (c *calendar) renderFirstRow(bs nepcal.Time) {
 func (c *calendar) renderCalWithoutFirstRow(bs nepcal.Time) {
 	daysInMonth := bs.NumDaysInMonth()
 
-	for c.val < daysInMonth {
+	for c.val <= daysInMonth {
 		for i := 0; i < 7; i++ {
 			if c.val > daysInMonth {
 				break
