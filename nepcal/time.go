@@ -1,4 +1,4 @@
-// Package time is the root of all functionality for B.S. dates.
+// Package nepcal is the root of all functionality for B.S. dates.
 //
 // This package is similar to the `time.Time` package in the standard
 // library which works with Gregorian dates.
@@ -15,10 +15,11 @@
 // Check the documentation for the specific functions or methods to know what
 // invariants may need to be upheld for functionality to work correctly. In general,
 // this is only relevant when *constructing* the dates.
-package time
+package nepcal
 
 import (
 	"errors"
+	"fmt"
 	"time"
 )
 
@@ -89,6 +90,11 @@ func DateUnchecked(year int, month Month, day int) Time {
 	return fromRaw(inraw)
 }
 
+// Gregorian returns the A.D. equivalent of this date.
+func (t Time) Gregorian() time.Time {
+	return t.in
+}
+
 // Date returns the yy, mm, dd values represented by the Time. To get only year,
 // month or day values, use the respective 'Year', 'Month' or 'Day' methods.
 func (t Time) Date() (int, Month, int) {
@@ -153,6 +159,11 @@ func (t Time) NumDaysSpanned() int {
 // After reports whether the Time t, is after u.
 func (t Time) After(u Time) bool {
 	return after(t.toRaw(), u.toRaw())
+}
+
+// String satisfies the stringer interface.
+func (t Time) String() string {
+	return fmt.Sprintf("%s %d, %d %s", t.Month(), t.Day(), t.Year(), t.Weekday())
 }
 
 // Internal method to generate raw dates from valid B.S. dates.

@@ -1,4 +1,4 @@
-package time
+package nepcal
 
 // Month represents a B.S. month much like time.Month represents a Gregorian month.
 type Month int
