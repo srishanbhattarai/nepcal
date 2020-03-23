@@ -3,18 +3,18 @@
 Nepcal is a command line tool and a library that provides several functionalities pertaining to [Bikram Sambat (B.S.)](https://calendars.wikia.org/wiki/Bikram_Samwat) calendars, the official calendar in Nepal. 
 
 ## Table of Contents
-1. [CLI description](#command-line)
-2. [CLI installation](#installation)
-        i. [Pre-built binaries](#pre-built-binaries)
-        ii. [Homebrew on Mac](#homebrew-on-mac)
-        iii. [Using Go](#using-go-get)
-3. [CLI Usage)(#usage)
-    i. [Monthly calendar](#monthly-calendar)
-    ii. [Today's B.S. date](#todays-date-and-day)
-    iii. [A.D. to B.S. conversion](#convert-ad-date-to-bs)
-    iv. [B.S. to A.D. conversion](#convert-bs-date-to-ad)
-4. [Contributing](#contributing)
-5. [License](#license)
+* [Command Line](#command-line)
+* [Installation](#installation)
+  * [Pre-built binaries](#pre-built-binaries)
+  * [Homebrew on Mac](#homebrew-on-mac)
+  * [Using go get](#using-go-get)
+* [Usage](#usage)
+  * [Monthly Calendar](#monthly-calendar)
+  * [Today's date and day](#todays-date-and-day)
+  * [Convert an A.D. date to B.S.](#convert-an-ad-date-to-bs)
+  * [Convert a B.S. date to A.D.](#convert-a-bs-date-to-ad)
+* [Contributing](#contributing)
+* [License](#license)
 
 ## Command Line 
 The `nepcal` CLI was initially inspired from the `cal` command on Linux, but expanded to have much more functionality, namely:
