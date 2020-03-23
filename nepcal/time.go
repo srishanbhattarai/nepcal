@@ -26,8 +26,12 @@ import (
 // ErrOutOfBounds is the error returned for out of bounds Gregorian dates.
 var ErrOutOfBounds = errors.New("Provided date out of bounds; consult function/method documentation")
 
-// A Time struct represents a single Bikram Sambat date. See the 'From' methods to
-// construct an instance of this date.
+// A Time struct represents a single Bikram Sambat date. An instance of this struct is
+//the primary way to interact with most functionality.
+// It can be created in two general ways:
+//	 1. If you have a Gregorian date, and want a B.S. date, use the "FromGregorian" method.
+//	 2. If you have B.S. date, and want to access additional functionality on it, or convert it to
+//		Gregorian, then use the "Date" method.
 type Time struct {
 	// The inner Gregorian date that this Time corresponds to, in UTC.
 	in time.Time
@@ -90,7 +94,11 @@ func DateUnchecked(year int, month Month, day int) Time {
 	return fromRaw(inraw)
 }
 
-// Gregorian returns the A.D. equivalent of this date.
+// Gregorian returns the A.D. equivalent of this date. If this struct was initially creaated
+// from a gregorian date, then it returns the same input date. Otherwise, if it was created from a raw
+// B.S. date using the "Date" method, then it returns the A.D. representation of that date.
+// Note that the "Date" method already does the conversion during creation, so this method
+// is free of any computation in either of the two cases.
 func (t Time) Gregorian() time.Time {
 	return t.in
 }
