@@ -1,30 +1,42 @@
 # nepcal &middot; [![Build Status](https://travis-ci.org/srishanbhattarai/nepcal.svg?branch=master)](https://travis-ci.org/srishanbhattarai/nepcal) [![Build status](https://ci.appveyor.com/api/projects/status/6vm0m2ph6usjvdn4/branch/master?svg=true)](https://ci.appveyor.com/project/srishanbhattarai/nepcal-j10el/branch/master) [![Coverage Status](https://coveralls.io/repos/github/srishanbhattarai/nepcal/badge.svg?branch=master)](https://coveralls.io/github/srishanbhattarai/nepcal?branch=master) [![Go Report Card](https://goreportcard.com/badge/github.com/srishanbhattarai/nepcal)](https://goreportcard.com/report/github.com/srishanbhattarai/nepcal) [![GoDoc](https://godoc.org/github.com/srishanbhattarai/nepcal?status.svg)](https://godoc.org/github.com/srishanbhattarai/nepcal)
 
-> Calendar and conversion utilities for Nepali dates
+Nepcal is a command line tool and a library that provides several functionalities pertaining to [Bikram Sambat (B.S.)](https://calendars.wikia.org/wiki/Bikram_Samwat) calendars, the official calendar in Nepal. 
 
-Inspired from the Linux command line tool `cal`, `nepcal` adds a few nifty features especially for Nepali ([B.S.](https://en.wikipedia.org/wiki/Vikram_Samvat)) dates.
+## Table of Contents
+1. [CLI description](#command-line)
+2. [CLI installation](#installation)
+        i. [Pre-built binaries](#pre-built-binaries)
+        ii. [Homebrew on Mac](#homebrew-on-mac)
+        iii. [Using Go](#using-go-get)
+3. [CLI Usage)(#usage)
+    i. [Monthly calendar](#monthly-calendar)
+    ii. [Today's B.S. date](#todays-date-and-day)
+    iii. [A.D. to B.S. conversion](#convert-ad-date-to-bs)
+    iv. [B.S. to A.D. conversion](#convert-bs-date-to-ad)
+4. [Contributing](#contributing)
+5. [License](#license)
 
-## Feature Rundown
+## Command Line 
+The `nepcal` CLI was initially inspired from the `cal` command on Linux, but expanded to have much more functionality, namely:
 
-Complete instructions on how to use each of these features are mentioned below.
-
-* [x] Show the current Nepali month's calendar
+* [x] Show the current Nepali month's calendar (Similar to `cal`)
 * [x] Show today's Nepali date and day
-* [x] Convert an A.D. date into B.S.
-* [x] Convert an B.S. date into A.D.
+* [x] Convert A.D. (gregorian) dates to B.S. dates and vice-versa.
 
 ## Installation
+There are several ways to install the CLI. Pick the one that best suits you from the options below. In any case, run `nepcal` on your terminal; if you see some formatted output then you are good to go.
 
-Pre-built tarball binaries are available in the [Releases](https://github.com/srishanbhattarai/nepcal/releases) page. Download and untar the binary for your platform, then move it into your `$PATH` e.g. `/usr/local/bin`.
+### Pre-built binaries
+Pre-built tarball executables/binaries are available in the [Releases](https://github.com/srishanbhattarai/nepcal/releases) page for MacOS, Windows, and Linux. 
+Download and untar the binary for your platform, then move it into your executable path. e.g. `/usr/local/bin` on Mac or Linux.
 
 You might need to give the script execution permissions. On Linux and MacOS this would mean using `chmod` as follows:
-
+    
 ```
 $ chmod +x /usr/local/bin/nepcal
 ```
 
-### MacOS via Homebrew
-
+### Homebrew on Mac
 Tap the repository first.
 
 ```
@@ -37,15 +49,12 @@ Then, run:
 $ brew install nepcal
 ```
 
-### Manual Installation
-
-You can also install `nepcal` manually if you have Go installed
+### Using `go get`
+You can also install `nepcal` manually if you have the Go toolchain installed
 
 ```
-$ go get -v github.com/srishanbhattarai/nepcal
+$ go get -v github.com/srishanbhattarai/nepcal/cmd/nepcal
 ```
-
-Run `nepcal` on your terminal - if you see some formatted output, you are good to go!
 
 ## Usage
 
@@ -73,7 +82,7 @@ $ nepcal date # or nepcal d
 साउन 29, 2075 मंगलबार
 ```
 
-### Convert A.D. date to B.S.
+### Convert an A.D. date to B.S.
 
 Use the `mm-dd-yyyy` format when converting A.D. to B.S.
 
@@ -83,7 +92,7 @@ $ nepcal conv adtobs 08-21-1994
 भदौ 5, 2051 आइतबार
 ```
 
-### Convert B.S. date to A.D.
+### Convert a B.S. date to A.D.
 
 Use the `mm-dd-yyyy` format when converting B.S. to A.D.
 
