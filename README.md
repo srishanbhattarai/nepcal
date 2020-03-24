@@ -80,7 +80,7 @@ $ nepcal cal # or nepcal c
 ```
 $ nepcal date # or nepcal d
 
-साउन 29, 2075 मंगलबार
+चैत १०, २०७६ सोमबार
 ```
 
 ### Convert an A.D. date to B.S.
@@ -90,7 +90,7 @@ Use the `mm-dd-yyyy` format when converting A.D. to B.S.
 ```
 $ nepcal conv adtobs 08-21-1994
 
-भदौ 5, 2051 आइतबार
+भदौ ५, २०५१ आइतबार
 ```
 
 ### Convert a B.S. date to A.D.
@@ -98,7 +98,7 @@ $ nepcal conv adtobs 08-21-1994
 Use the `mm-dd-yyyy` format when converting B.S. to A.D.
 
 ```
-$ nepcal conv bstoad 18-08-2053
+$ nepcal conv bstoad 08-18-2053
 
 December 3, 1996 Tuesday
 ```
