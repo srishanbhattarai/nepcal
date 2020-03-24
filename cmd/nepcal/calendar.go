@@ -52,7 +52,7 @@ func (c *calendar) renderFirstRow(bs nepcal.Time) {
 	}
 
 	for i := 0; i < (7 - offset); i++ {
-		fmt.Fprintf(c.w, "\t%d", c.val)
+		fmt.Fprintf(c.w, "\t%s", c.reprValue(c.val))
 		c.next()
 	}
 
@@ -71,7 +71,7 @@ func (c *calendar) renderCalWithoutFirstRow(bs nepcal.Time) {
 				break
 			}
 
-			fmt.Fprintf(c.w, "\t%d", c.val)
+			fmt.Fprintf(c.w, "\t%s", c.reprValue(c.val))
 			c.next()
 		}
 
@@ -93,10 +93,14 @@ func (c *calendar) renderStaticDaysHeader() {
 func (c *calendar) renderBSDateHeader(t nepcal.Time) {
 	yy, mm, dd := t.Date()
 
-	fmt.Fprintf(c.w, "\t\t%s %d, %d\n\t", mm.String(), dd, yy)
+	fmt.Fprintf(c.w, "\t\t%s %s, %s\n\t", mm.String(), c.reprValue(dd), c.reprValue(yy))
 }
 
 // next increments the value counter.
 func (c *calendar) next() {
 	c.val++
+}
+
+func (c *calendar) reprValue(val int) string {
+	return nepcal.Numeral(val).String()
 }

@@ -171,7 +171,7 @@ func (t Time) After(u Time) bool {
 
 // String satisfies the stringer interface.
 func (t Time) String() string {
-	return fmt.Sprintf("%s %d, %d %s", t.Month(), t.Day(), t.Year(), t.Weekday())
+	return fmt.Sprintf("%s %s, %s %s", t.Month(), Numeral(t.Day()), Numeral(t.Year()), t.Weekday())
 }
 
 // Internal method to generate raw dates from valid B.S. dates.
