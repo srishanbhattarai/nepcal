@@ -21,7 +21,7 @@ func TestShowDateBS(t *testing.T) {
 		{
 			"case-1",
 			time.Date(2018, time.May, 17, 0, 0, 0, 0, time.UTC),
-			"जेठ 3, 2075 बिहिबार\n",
+			"जेठ ३, २०७५ बिहिबार\n",
 		},
 	}
 

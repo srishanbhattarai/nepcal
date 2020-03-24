@@ -107,3 +107,37 @@ func (w Weekday) Name() string {
 func (w Weekday) String() string {
 	return w.Name()
 }
+
+// Numeral represents a Nepali number.
+type Numeral int
+
+// Returns the Nepali representation of this numeral.
+func (n Numeral) String() string {
+	numerals := map[int]string{
+		0: "०",
+		1: "१",
+		2: "२",
+		3: "३",
+		4: "४",
+		5: "५",
+		6: "६",
+		7: "७",
+		8: "८",
+		9: "९",
+	}
+
+	// Recurse through the digits and create the Nepali representation.
+	repr := ""
+	curr := int(n)
+	for {
+		p := curr % 10
+		repr = numerals[p] + repr
+
+		curr = curr / 10
+		if curr == 0 {
+			break
+		}
+	}
+
+	return repr
+}
