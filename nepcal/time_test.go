@@ -55,7 +55,7 @@ func TestFromGregorian(t *testing.T) {
 		},
 		{
 			"case6",
-			gregorian(2037, 9, 16),
+			gregorian(2039, 9, 16),
 			-1, -1, -1,
 		},
 		{
