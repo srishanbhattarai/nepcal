@@ -2,16 +2,16 @@
 class Nepcal < Formula
   desc "Equivalent of Linux's cal, for Nepali dates"
   homepage "https://github.com/nepcal/nepcal"
-  version "1.0.0"
+  version "1.1.0"
   bottle :unneeded
 
   if OS.mac?
-    url "https://github.com/srishanbhattarai/nepcal/releases/download/v1.0.0/nepcal_1.0.0_darwin_amd64.tar.gz"
-    sha256 "4c3175f36191ffc0cc6971ea747bd9f088f34892e202327c59db5ec39bc257d6"
+    url "https://github.com/srishanbhattarai/nepcal/releases/download/v1.1.0/nepcal_1.1.0_darwin_amd64.tar.gz"
+    sha256 "81294d79c61e7fcd598043fdd2dae65ddd4ab133f2baccc179480fb2b4619ef1"
   elsif OS.linux?
     if Hardware::CPU.intel?
-      url "https://github.com/srishanbhattarai/nepcal/releases/download/v1.0.0/nepcal_1.0.0_linux_amd64.tar.gz"
-      sha256 "b848c556e9d7299bb32f477974af58397a600659a6130197bcf7fa3f434e8b41"
+      url "https://github.com/srishanbhattarai/nepcal/releases/download/v1.1.0/nepcal_1.1.0_linux_amd64.tar.gz"
+      sha256 "2a3b6d7644359a36e141f7a37eb17473d513b36d59ce5979edcbe17ac2a9fe44"
     end
   end
 
