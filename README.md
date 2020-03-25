@@ -66,13 +66,14 @@ Complete details can be found by running `nepcal` without any arguments.
 ```
 $ nepcal cal # or nepcal c
 
-    जेठ 3, 2075
+    चैत ११, २०७६
  Su Mo Tu We Th Fr Sa
-       1  2  3  4  5
- 6  7  8  9  10 11 12
- 13 14 15 16 17 18 19
- 20 21 22 23 24 25 26
- 27 28 29 30 31 32
+                   १
+ २  ३  ४  ५  ६  ७  ८
+ ९  १० ११ १२ १३ १४ १५
+ १६ १७ १८ १९ २० २१ २२
+ २३ २४ २५ २६ २७ २८ २९
+ ३०
 ```
 
 ### Today's date and day
