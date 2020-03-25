@@ -35,9 +35,11 @@ func bootstrapCli() *cli.App {
 	nc := nepcalCli{}
 
 	app := &cli.App{
-		Name:    "nepcal",
-		Version: version,
-		Usage:   "Calendar and conversion utilities for Nepali dates",
+		Name:            "nepcal",
+		Version:         version,
+		Usage:           "Calendar and conversion utilities for Nepali dates",
+		HideVersion:     true,
+		HideHelpCommand: true,
 		Authors: []*cli.Author{
 			{
 				Name:  "Srishan Bhattarai",
