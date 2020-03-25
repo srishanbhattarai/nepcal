@@ -22,7 +22,7 @@ func TestMonth(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, nd, 32)
 
-	_, err = b.NumDays(2091)
+	_, err = b.NumDays(2096)
 	assert.Equal(t, err, ErrOutOfBounds)
 }
 
