@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/srishanbhattarai/nepcal/nepcal"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
 // nepcalCli is a struct to hold all the CLI behavior.
@@ -17,26 +17,31 @@ import (
 type nepcalCli struct{}
 
 // Shows the calendar for the current day.
-func (nepcalCli) showCalendar(c *cli.Context) {
+func (nepcalCli) showCalendar(c *cli.Context) error {
 	cal := newCalendar(writer)
 	cal.Render(time.Now())
+
+	return nil
 }
 
 // Shows the date for the provided time. Returns a cli 'action'.
-func (nepcalCli) showDate(w io.Writer, t time.Time) func(c *cli.Context) {
-	return func(c *cli.Context) {
+func (nepcalCli) showDate(w io.Writer, t time.Time) func(c *cli.Context) error {
+	return func(c *cli.Context) error {
 		// This will stop working in year bsUBoundY + 1 (:
 		bs := nepcal.FromGregorianUnchecked(t)
 
 		fmt.Fprintln(w, bs.String())
+
+		return nil
 	}
 }
 
 // Convert AD date to BS date after validation.
-func (nepcalCli) convADToBS(c *cli.Context) {
+func (nepcalCli) convADToBS(c *cli.Context) error {
 	if !validateArgs(c) {
 		fmt.Fprintln(os.Stderr, "Please supply a valid date in the format mm-dd-yyyy. Example: `nepcal conv adtobs 08-21-1994`")
-		return
+
+		return cli.NewExitError("", 1)
 	}
 
 	mm, dd, yy, _ := parseRawDate(c.Args().First())
@@ -45,17 +50,21 @@ func (nepcalCli) convADToBS(c *cli.Context) {
 	bs, err := nepcal.FromGregorian(ad)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Please supply a date after 04/14/1943.")
-		return
+
+		return cli.NewExitError("", 1)
 	}
 
 	fmt.Fprintln(writer, bs.String())
+
+	return nil
 }
 
 // Convert BS date to AD date after validation.
-func (nepcalCli) convBSToAD(c *cli.Context) {
+func (nepcalCli) convBSToAD(c *cli.Context) error {
 	if !validateArgs(c) {
 		fmt.Fprintln(os.Stderr, "Please supply a valid date in the format mm-dd-yyyy. Example: `nepcal conv bstoad 08-18-2053`")
-		return
+
+		return cli.NewExitError("", 1)
 	}
 
 	mm, dd, yy, _ := parseRawDate(c.Args().First())
@@ -63,10 +72,13 @@ func (nepcalCli) convBSToAD(c *cli.Context) {
 	d, err := nepcal.Date(yy, nepcal.Month(mm), dd)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Please ensure the date is between 1/1/2000 and 12/30/2095")
-		return
+
+		return cli.NewExitError("", 1)
 	}
 
 	printGregorian(writer, d.Gregorian())
+
+	return nil
 }
 
 // Validates the arguments provided to the program.

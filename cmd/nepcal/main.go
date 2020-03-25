@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
 const versionNumber = "v1.1.0"
@@ -32,7 +32,7 @@ func bootstrapCli() *cli.App {
 	app.Name = "nepcal"
 	app.Version = versionNumber
 	app.Usage = "Calendar and conversion utilities for Nepali dates"
-	app.Commands = []cli.Command{
+	app.Commands = []*cli.Command{
 		{
 			Name:    "cal",
 			Aliases: []string{"c"},
@@ -48,7 +48,7 @@ func bootstrapCli() *cli.App {
 		{
 			Name:  "conv",
 			Usage: "Convert AD dates to BS and vice-versa",
-			Subcommands: []cli.Command{
+			Subcommands: []*cli.Command{
 				{
 					Name:   "adtobs",
 					Usage:  "Convert AD date to BS date",
