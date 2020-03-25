@@ -11,7 +11,7 @@
 // example, the `IsInRangeYear` function is for B.S. dates whereas IsInRangeGregorian
 // is explicitly for Gregorian dates.
 //
-// This package only works for a range of dates; from B.S. 1/1/2000 to 12/30/2090.
+// This package only works for a range of dates. Functions are provided to test for this.
 // Check the documentation for the specific functions or methods to know what
 // invariants may need to be upheld for functionality to work correctly. In general,
 // this is only relevant when *constructing* the dates.
@@ -67,15 +67,15 @@ func FromGregorian(t time.Time) (Time, error) {
 // If you violate this invariant, the correctness of other parameters after conversion
 // such as year, month, days etc. for BS dates is undefined.
 //
-// An example of where this is useful is when you are constructing from today's date (provided this isn't B.S. 2090).
+// An example of where this is useful is when you are constructing from today's date (provided this isn't B.S. bsUBoundY + 1).
 // For all times 't' such that IsInRangeGregorian(t) == true, this function is safe to use.
 func FromGregorianUnchecked(t time.Time) Time {
 	return fromGregorian(t)
 }
 
 // Date constructs a B.S. date using raw parts "year, month, date". As with the,
-// "From_" constructors, the specified B.S date must be in the supported range of
-// 1/1/2000 to 12/30/2090
+// "From_" constructors, the specified B.S date must be in the supported range as
+// specified by the IsInRangeBS function.
 func Date(year int, month Month, day int) (Time, error) {
 	if !IsInRangeBS(year, month, day) {
 		return Time{}, ErrOutOfBounds

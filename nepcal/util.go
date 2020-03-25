@@ -12,8 +12,8 @@ func IsInRangeGregorian(t time.Time) bool {
 	return t.After(adLBound)
 }
 
-// IsInRangeBS checks if the provided date represents a B.S. date after
-// 04/14/1943 and before 30/12/2090 which is the supported date range.
+// IsInRangeBS checks if the provided date represents a B.S. that
+// we have data for and can be supported for conversions to/from A.D.
 func IsInRangeBS(year int, month Month, day int) bool {
 	// Lower bound raw date.
 	bslow := raw{bsLBoundY, bsLBoundM, bsLBoundD}

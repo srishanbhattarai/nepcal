@@ -25,7 +25,7 @@ func (nepcalCli) showCalendar(c *cli.Context) {
 // Shows the date for the provided time. Returns a cli 'action'.
 func (nepcalCli) showDate(w io.Writer, t time.Time) func(c *cli.Context) {
 	return func(c *cli.Context) {
-		// This will stop working in 2090 (:
+		// This will stop working in year bsUBoundY + 1 (:
 		bs := nepcal.FromGregorianUnchecked(t)
 
 		fmt.Fprintln(w, bs.String())
@@ -62,7 +62,7 @@ func (nepcalCli) convBSToAD(c *cli.Context) {
 
 	d, err := nepcal.Date(yy, nepcal.Month(mm), dd)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Please ensure the date is between 1/1/2000 and 12/30/2090")
+		fmt.Fprintln(os.Stderr, "Please ensure the date is between 1/1/2000 and 12/30/2095")
 		return
 	}
 

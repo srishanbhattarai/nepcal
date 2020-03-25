@@ -24,7 +24,7 @@ const (
 // this method takes in the 'year' value as a parameter.
 //
 // Note that the 'year' value should be in the supported B.S. year
-// range (2000 - 2090) which can be checked using the 'IsInRangeYear' method.
+// range which can be checked using the 'IsInRangeYear' method.
 // This method will return an ErrOutOfBounds if it is not in that range.
 func (m Month) NumDays(year int) (int, error) {
 	if !IsInRangeYear(year) {
