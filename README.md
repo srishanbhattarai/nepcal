@@ -65,7 +65,6 @@ Complete details can be found by running `nepcal` without any arguments.
 
 ```
 $ nepcal cal # or nepcal c
-
     चैत ११, २०७६
  Su Mo Tu We Th Fr Sa
                    १
