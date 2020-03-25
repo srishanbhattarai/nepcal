@@ -4,4 +4,5 @@ before_install: go get github.com/mattn/goveralls
 install: go get -t ./...
 script:
   - make test
-  - $GOPATH/bin/goveralls -service=travis-ci
+  - make cover
+  - $GOPATH/bin/goveralls -coverprofile=coverage.out -service=travis-ci

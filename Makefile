@@ -1,3 +1,6 @@
 test:
 	- go test -v ./...
 
+cover:
+	- go test -v -covermode=count -coverprofile=coverage.out ./...
+
