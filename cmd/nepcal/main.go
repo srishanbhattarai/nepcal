@@ -11,7 +11,8 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-const version = "v1.1.0"
+// Injected at link time.
+var version string
 
 // Cheap testing.
 var writer io.Writer = os.Stdout
@@ -38,7 +39,6 @@ func bootstrapCli() *cli.App {
 		Name:            "nepcal",
 		Version:         version,
 		Usage:           "Calendar and conversion utilities for Nepali dates",
-		HideVersion:     true,
 		HideHelpCommand: true,
 		Authors: []*cli.Author{
 			{
