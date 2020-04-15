@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/fatih/color"
@@ -96,8 +97,8 @@ func getNepcalEntries(count int) []DateMapEntry {
 
 // Format entry into string.
 func fmtEntry(e DateMapEntry) string {
-	us := fmt.Sprintf("%d-%d-%d", e.EnYear, e.EnMonth, e.EnDay)
-	np := fmt.Sprintf("%d-%d-%d", e.NpYear, e.NpMonth, e.NpDay)
+	us := fmt.Sprintf("(en) %d-%d-%d", e.EnYear, e.EnMonth, e.EnDay)
+	np := fmt.Sprintf("(np) %d-%d-%d", e.NpYear, e.NpMonth, e.NpDay)
 
 	return fmt.Sprintf("%s ==> %s", us, np)
 }
@@ -111,32 +112,31 @@ func diffEntries(us, them []DateMapEntry) {
 	}
 
 	type failure struct {
-		us   DateMapEntry
-		them DateMapEntry
+		index int
+		us    DateMapEntry
+		them  DateMapEntry
 	}
 	var failures []failure
 
 	// Find cases where dates don't match
 	for i := 0; i < len(us); i++ {
 		if us[i] != them[i] {
-			failures = append(failures, failure{us[i], them[i]})
+			failures = append(failures, failure{i, us[i], them[i]})
 		}
 	}
 
-	fmt.Printf(fmt.Sprintf("Number of inconsistencies: %d\n", len(failures)))
+	fmt.Printf(fmt.Sprintf("Number of inconsistencies: %s\n", color.YellowString(strconv.Itoa(len(failures)))))
 
 	// Pretty print diffs
-	for k, v := range failures {
-		fmt.Printf("Inconsistency %d\n", k+1)
+	for _, v := range failures {
+		fmt.Printf("Inconsistency: %s\n", color.BlueString(strconv.Itoa(v.index)))
 
-		us := fmt.Sprintf("- %s", fmtEntry(v.us))
-		them := fmt.Sprintf("+ %s", fmtEntry(v.them))
+		us := fmt.Sprintf("- (actual)   %s", fmtEntry(v.us))
+		them := fmt.Sprintf("+ (expected) %s", fmtEntry(v.them))
 
 		fmt.Printf(fmt.Sprintf("%s\n", color.RedString(us)))
-		fmt.Printf(fmt.Sprintf("%s\n", color.GreenString(them)))
+		fmt.Printf(fmt.Sprintf("%s\n\n", color.GreenString(them)))
 	}
-
-	fmt.Println()
 }
 
 func main() {
@@ -147,6 +147,5 @@ func main() {
 	}
 
 	libEntries := getNepcalEntries(len(refEntries))
-
 	diffEntries(libEntries, refEntries)
 }
