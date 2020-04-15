@@ -9,7 +9,7 @@ import (
 func IsInRangeGregorian(t time.Time) bool {
 	adLBound := gregorian(adLBoundY, adLBoundM, adLBoundD)
 
-	return t.After(adLBound)
+	return t.Equal(adLBound) || t.After(adLBound)
 }
 
 // IsInRangeBS checks if the provided date represents a B.S. that
