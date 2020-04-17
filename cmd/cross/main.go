@@ -30,7 +30,7 @@ type DateMapEntry struct {
 }
 
 // Latest reference data.
-const refEntriesFile = "ref_67989f277816566067a53ac446e558ed94cc489c.min.json"
+const refEntriesFile = "reference.json"
 
 // Get the reference entries, properly serialized, and sliced for only the range for which we support.
 func getRefEntries() ([]DateMapEntry, error) {
@@ -125,8 +125,6 @@ func diffEntries(us, them []DateMapEntry) {
 		}
 	}
 
-	fmt.Printf(fmt.Sprintf("Number of inconsistencies: %s\n", color.YellowString(strconv.Itoa(len(failures)))))
-
 	// Pretty print diffs
 	for _, v := range failures {
 		fmt.Printf("Inconsistency: %s\n", color.BlueString(strconv.Itoa(v.index)))
@@ -137,6 +135,11 @@ func diffEntries(us, them []DateMapEntry) {
 		fmt.Printf(fmt.Sprintf("%s\n", color.RedString(us)))
 		fmt.Printf(fmt.Sprintf("%s\n\n", color.GreenString(them)))
 	}
+
+	fmt.Printf(fmt.Sprintf("Number of inconsistencies: %s\n", color.YellowString(strconv.Itoa(len(failures)))))
+
+	failureRate := (float64(len(failures)) / float64(len(us))) * 100
+	fmt.Printf(fmt.Sprintf("Failure percentage: %s\n", color.YellowString(fmt.Sprintf("%.2f", failureRate))))
 }
 
 func main() {
