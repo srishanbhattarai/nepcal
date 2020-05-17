@@ -14,9 +14,9 @@ import (
 
 // Copied from "nepcal/constants.go" as these are not public but are needed for this specific use case.
 const (
-	adLBoundY = 1943
+	adLBoundY = 1918
 	adLBoundM = int(time.April)
-	adLBoundD = 14
+	adLBoundD = 13
 )
 
 // DateMapEntry is each entry in the array of results returned by the reference URL.
@@ -29,11 +29,8 @@ type DateMapEntry struct {
 	EnDay   int `json:"enDay"`
 }
 
-// Latest reference data.
-const refEntriesFile = "reference.json"
-
 // Get the reference entries, properly serialized, and sliced for only the range for which we support.
-func getRefEntries() ([]DateMapEntry, error) {
+func getRefEntries(refEntriesFile string) ([]DateMapEntry, error) {
 	// Read file.
 	b, err := ioutil.ReadFile(refEntriesFile)
 	if err != nil {
@@ -106,7 +103,7 @@ func fmtEntry(e DateMapEntry) string {
 // diff the two data sources and print to stdout.
 // us = entries created by this library
 // them = external entries for validation.
-func diffEntries(us, them []DateMapEntry) {
+func diffEntries(us, them []DateMapEntry) int {
 	if len(us) != len(them) {
 		panic(fmt.Sprintf("Invariant violation mismatching lengths; us = %v, them = %v\n", us, them))
 	}
@@ -140,15 +137,29 @@ func diffEntries(us, them []DateMapEntry) {
 
 	failureRate := (float64(len(failures)) / float64(len(us))) * 100
 	fmt.Printf(fmt.Sprintf("Failure percentage: %s\n", color.YellowString(fmt.Sprintf("%.2f", failureRate))))
+
+	return len(failures)
 }
 
 func main() {
-	refEntries, err := getRefEntries()
+	if len(os.Args) < 2 {
+		fmt.Fprintln(os.Stderr, "Please provide the reference JSON file.")
+		os.Exit(1)
+	}
+
+	refEntries, err := getRefEntries(os.Args[1])
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}
 
 	libEntries := getNepcalEntries(len(refEntries))
-	diffEntries(libEntries, refEntries)
+
+	n := diffEntries(libEntries, refEntries)
+
+	if n == 0 {
+		os.Exit(0)
+	} else {
+		os.Exit(1)
+	}
 }
