@@ -34,7 +34,7 @@ func fromGregorian(t time.Time) Time {
 	// find the BS date according to the reasoning above, distributing the
 	// daysElapsed along the data grid.
 	year, month, days := func() (int, int, int) {
-		for i := bsLBoundY; i < bsUBoundY; i++ {
+		for i := bsLBoundY; i <= bsUBoundY; i++ {
 			for j := 0; j < 12; j++ {
 				days := bsDaysInMonthsByYear[i][j]
 
