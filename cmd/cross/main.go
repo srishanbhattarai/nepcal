@@ -29,15 +29,21 @@ type DateMapEntry struct {
 	EnDay   int `json:"enDay"`
 }
 
+// Satisfies the stringer interface.
+func (e DateMapEntry) String() string {
+	us := fmt.Sprintf("(en) %d-%d-%d", e.EnYear, e.EnMonth, e.EnDay)
+	np := fmt.Sprintf("(np) %d-%d-%d", e.NpYear, e.NpMonth, e.NpDay)
+
+	return fmt.Sprintf("%s ==> %s", us, np)
+}
+
 // Get the reference entries, properly serialized, and sliced for only the range for which we support.
 func getRefEntries(refEntriesFile string) ([]DateMapEntry, error) {
-	// Read file.
 	b, err := ioutil.ReadFile(refEntriesFile)
 	if err != nil {
 		return nil, err
 	}
 
-	// Marshal
 	var entries []DateMapEntry
 	err = json.Unmarshal(b, &entries)
 	if err != nil {
@@ -45,6 +51,8 @@ func getRefEntries(refEntriesFile string) ([]DateMapEntry, error) {
 	}
 
 	// Figure out the index at which the first entry for adLBoundY exists.
+	// This is to only check for the subset of dates that *we* support rather than the date
+	// range supported by the reference JSON.
 	index := 0
 	for k, v := range entries {
 		if v.EnYear == adLBoundY && v.EnMonth == adLBoundM && v.EnDay == adLBoundD {
@@ -65,8 +73,8 @@ func getNepcalEntries(count int) []DateMapEntry {
 	entries := make([]DateMapEntry, count)
 
 	t := time.Date(adLBoundY, time.Month(adLBoundM), adLBoundD, 0, 0, 0, 0, time.UTC)
-	i := 0
 
+	i := 0
 	for i < count {
 		bs, err := nepcal.FromGregorian(t)
 		if err != nil {
@@ -90,14 +98,6 @@ func getNepcalEntries(count int) []DateMapEntry {
 	}
 
 	return entries
-}
-
-// Format entry into string.
-func fmtEntry(e DateMapEntry) string {
-	us := fmt.Sprintf("(en) %d-%d-%d", e.EnYear, e.EnMonth, e.EnDay)
-	np := fmt.Sprintf("(np) %d-%d-%d", e.NpYear, e.NpMonth, e.NpDay)
-
-	return fmt.Sprintf("%s ==> %s", us, np)
 }
 
 // diff the two data sources and print to stdout.
@@ -126,8 +126,8 @@ func diffEntries(us, them []DateMapEntry) int {
 	for _, v := range failures {
 		fmt.Printf("Inconsistency: %s\n", color.BlueString(strconv.Itoa(v.index)))
 
-		us := fmt.Sprintf("- (actual)   %s", fmtEntry(v.us))
-		them := fmt.Sprintf("+ (expected) %s", fmtEntry(v.them))
+		us := fmt.Sprintf("- (actual)   %s", v.us)
+		them := fmt.Sprintf("+ (expected) %s", v.them)
 
 		fmt.Printf(fmt.Sprintf("%s\n", color.RedString(us)))
 		fmt.Printf(fmt.Sprintf("%s\n\n", color.GreenString(them)))
@@ -153,6 +153,7 @@ func main() {
 		os.Exit(1)
 	}
 
+	// length of refEntries is just a size hint for allocating memory
 	libEntries := getNepcalEntries(len(refEntries))
 
 	n := diffEntries(libEntries, refEntries)
