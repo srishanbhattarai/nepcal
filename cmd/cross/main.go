@@ -62,7 +62,7 @@ func getRefEntries(refEntriesFile string) ([]DateMapEntry, error) {
 	}
 
 	cov := (float64(len(entries)-index+1) / float64(len(entries))) * 100
-	fmt.Printf("Starting at index: %d, percentage coverage of reference: %.2f\n", index, cov)
+	fmt.Printf("Coverage: %.1f\n", cov)
 
 	return entries[index:], nil
 }
@@ -136,7 +136,7 @@ func diffEntries(us, them []DateMapEntry) int {
 	fmt.Printf(fmt.Sprintf("Number of inconsistencies: %s\n", color.YellowString(strconv.Itoa(len(failures)))))
 
 	failureRate := (float64(len(failures)) / float64(len(us))) * 100
-	fmt.Printf(fmt.Sprintf("Failure percentage: %s\n", color.YellowString(fmt.Sprintf("%.2f", failureRate))))
+	fmt.Printf(fmt.Sprintf("Failure percentage: %s\n", color.YellowString(fmt.Sprintf("%.1f", failureRate))))
 
 	return len(failures)
 }
@@ -146,6 +146,9 @@ func main() {
 		fmt.Fprintln(os.Stderr, "Please provide the reference JSON file.")
 		os.Exit(1)
 	}
+
+	d := color.New(color.FgCyan, color.Bold)
+	d.Println("\nNepcal correctness checker..")
 
 	refEntries, err := getRefEntries(os.Args[1])
 	if err != nil {
