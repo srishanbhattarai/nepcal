@@ -14,8 +14,9 @@ Nepcal is a command line tool and a library that provides several functionalitie
   * [Today's date and day](#todays-date-and-day)
   * [Convert an A.D. date to B.S.](#convert-an-ad-date-to-bs)
   * [Convert a B.S. date to A.D.](#convert-a-bs-date-to-ad)
-* [Contributing](#contributing)
 * [Library/Programmatic usage](#library)
+* [Acknowledgements](#acknowledgements)
+* [Contributing](#contributing)
 * [License](#license)
 
 ## Command Line
@@ -112,6 +113,12 @@ December 3, 1996 Tuesday
 ## Library
 
 If you would like to use `nepcal` as a Go library, the best reference is the [Godoc](https://godoc.org/github.com/srishanbhattarai/nepcal/nepcal) documentation for this package which should be fairly easy to navigate. The CLI tool is also built on this library. However, there are additional functionalities provided in the library that are not relevant in the CLI, for example the [`NumDaysSpanned()`](https://godoc.org/github.com/srishanbhattarai/nepcal/nepcal#Time.NumDaysSpanned) method.
+
+## Acknowledgements
+
+`nepcal` uses [`nepcal.com`](http://nepcal.com/) as the source of information used to create this tool. Among several sources, they were deemed most reliable.
+
+The name `nepcal` was independently chosen for this project which happened to coincide with the website.
 
 ## Contributing
 

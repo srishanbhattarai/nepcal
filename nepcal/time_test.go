@@ -55,21 +55,16 @@ func TestFromGregorian(t *testing.T) {
 		},
 		{
 			"case6",
-			gregorian(2039, 9, 16),
-			-1, -1, -1,
-		},
-		{
-			"case7",
 			gregorian(2019, 06, 15),
 			2076, Jestha, 32,
 		},
 		{
-			"case8",
+			"case7",
 			gregorian(2019, 06, 13),
 			2076, Jestha, 30,
 		},
 		{
-			"case9",
+			"case8",
 			dummyNepaliTime(2019, 05, 05),
 			2076, Baisakh, 22,
 		},
@@ -90,7 +85,7 @@ func TestFromGregorian(t *testing.T) {
 	}
 
 	t.Run("panics if date is before 1943 April 14", func(t *testing.T) {
-		_, err := FromGregorian(gregorian(1943, 04, 01))
+		_, err := FromGregorian(gregorian(adLBoundY, 04, 01))
 		assert.Equal(t, err, ErrOutOfBounds)
 	})
 }
@@ -152,8 +147,8 @@ func TestBsAdConversion(t *testing.T) {
 		})
 	}
 
-	t.Run("panics if date is before 2000 Baisakh 1", func(t *testing.T) {
-		_, err := Date(1999, 04, 01)
+	t.Run("panics if date is before 1975 Baisakh 1", func(t *testing.T) {
+		_, err := Date(1974, 12, 30)
 		assert.Equal(t, err, ErrOutOfBounds)
 	})
 }

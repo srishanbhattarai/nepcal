@@ -5,4 +5,5 @@ install: go get -t ./...
 script:
   - make test
   - make cover
+  - make cross
   - $GOPATH/bin/goveralls -coverprofile=coverage.out -service=travis-ci
