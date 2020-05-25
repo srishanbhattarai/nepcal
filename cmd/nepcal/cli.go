@@ -39,7 +39,7 @@ func (nepcalCli) showDate(w io.Writer, t time.Time) func(c *cli.Context) error {
 // Convert AD date to BS date after validation.
 func (nepcalCli) convADToBS(c *cli.Context) error {
 	if !validateArgs(c) {
-		fmt.Fprintln(os.Stderr, "Please supply a valid date in the format mm-dd-yyyy. Example: `nepcal conv adtobs 08-21-1994`")
+		fmt.Fprintln(os.Stderr, "Please supply a valid date in the format mm-dd-yyyy. Example: `nepcal conv tobs 08-21-1994`")
 
 		return cli.NewExitError("", 1)
 	}
@@ -62,7 +62,7 @@ func (nepcalCli) convADToBS(c *cli.Context) error {
 // Convert BS date to AD date after validation.
 func (nepcalCli) convBSToAD(c *cli.Context) error {
 	if !validateArgs(c) {
-		fmt.Fprintln(os.Stderr, "Please supply a valid date in the format mm-dd-yyyy. Example: `nepcal conv bstoad 08-18-2053`")
+		fmt.Fprintln(os.Stderr, "Please supply a valid date in the format mm-dd-yyyy. Example: `nepcal conv toad 08-18-2053`")
 
 		return cli.NewExitError("", 1)
 	}
