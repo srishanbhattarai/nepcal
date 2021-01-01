@@ -18,8 +18,11 @@ type nepcalCli struct{}
 
 // Shows the calendar for the current day.
 func (nepcalCli) showCalendar(c *cli.Context) error {
-	cal := newCalendar(writer)
-	cal.Render(time.Now())
+	// get the calendar representation
+	calReader := nepcal.CalendarNow()
+
+	// stream into globalwriter
+	io.Copy(globalWriter, calReader)
 
 	return nil
 }
@@ -54,7 +57,7 @@ func (nepcalCli) convADToBS(c *cli.Context) error {
 		return cli.NewExitError("", 1)
 	}
 
-	fmt.Fprintln(writer, bs.String())
+	fmt.Fprintln(globalWriter, bs.String())
 
 	return nil
 }
@@ -76,7 +79,7 @@ func (nepcalCli) convBSToAD(c *cli.Context) error {
 		return cli.NewExitError("", 1)
 	}
 
-	printGregorian(writer, d.Gregorian())
+	printGregorian(globalWriter, d.Gregorian())
 
 	return nil
 }
