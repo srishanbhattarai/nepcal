@@ -1,4 +1,4 @@
-package main
+package nepcal
 
 import (
 	"bytes"
@@ -66,8 +66,9 @@ func TestRenderCalendar(t *testing.T) {
 
 		t.Run(test.name, func(t *testing.T) {
 			b.Reset()
-			c := newCalendar(b)
-			c.Render(test.t)
+			testDate := FromGregorianUnchecked(test.t)
+			c := newCalendar(testDate)
+			c.flushInto(b)
 			assert.Equal(t, clean(test.expected), clean(b.String()))
 		})
 	}

@@ -18,8 +18,10 @@
 package nepcal
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
+	"io"
 	"time"
 )
 
@@ -47,6 +49,20 @@ type raw struct {
 	year  int
 	month Month
 	day   int
+}
+
+// Now returns the nepcal.Time struct corresponding to the current time.
+// This is guaranteed not to fail for now, but will panic after 2044 AD/2100BS
+func Now() Time {
+	return FromGregorianUnchecked(time.Now())
+}
+
+// CalendarNow flushes the calendar representation of the current date into the
+// input writer.  This is guaranteed not to fail for now, but will panic after 2044 AD/2100BS
+func CalendarNow() io.Reader {
+	t := Now()
+
+	return t.Calendar()
 }
 
 // FromGregorian constructs a Bikram Sambat date from the provided Gregorian date.
@@ -162,6 +178,16 @@ func (t Time) NumDaysSpanned() int {
 	}
 
 	return sum
+}
+
+// Calendar returns an io.Reader which can be used to read the calendar
+// representation of this date.
+func (t Time) Calendar() io.Reader {
+	buf := bytes.NewBuffer([]byte(""))
+
+	newCalendar(t).flushInto(buf)
+
+	return buf
 }
 
 // After reports whether the Time t, is after u.

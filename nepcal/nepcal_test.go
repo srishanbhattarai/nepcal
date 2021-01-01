@@ -153,13 +153,6 @@ func TestBsAdConversion(t *testing.T) {
 	})
 }
 
-var fixtures = map[string]time.Time{
-	"May_17_2018":  time.Date(2018, time.May, 17, 0, 0, 0, 0, time.UTC),
-	"May_19_2018":  time.Date(2018, time.May, 19, 0, 0, 0, 0, time.UTC),
-	"May_26_2018":  time.Date(2018, time.May, 26, 0, 0, 0, 0, time.UTC),
-	"June_15_2018": time.Date(2018, time.June, 15, 0, 0, 0, 0, time.UTC),
-}
-
 func TestNumDays(t *testing.T) {
 	// This is also tested through the tests on 'Month' in 'parts_test.go'
 	bs, err := Date(2076, Baisakh, 8)
@@ -167,6 +160,13 @@ func TestNumDays(t *testing.T) {
 	assert.Equal(t, 31, bs.NumDaysInMonth())
 
 	assert.Equal(t, 365, bs.NumDaysInYear())
+}
+
+var weekdayTestFixtures = map[string]time.Time{
+	"May_17_2018":  time.Date(2018, time.May, 17, 0, 0, 0, 0, time.UTC),
+	"May_19_2018":  time.Date(2018, time.May, 19, 0, 0, 0, 0, time.UTC),
+	"May_26_2018":  time.Date(2018, time.May, 26, 0, 0, 0, 0, time.UTC),
+	"June_15_2018": time.Date(2018, time.June, 15, 0, 0, 0, 0, time.UTC),
 }
 
 func TestStartWeekday(t *testing.T) {
@@ -178,26 +178,26 @@ func TestStartWeekday(t *testing.T) {
 	}{
 		{
 			"less than 7",
-			fixtures["May_17_2018"],
-			FromGregorianUnchecked(fixtures["May_17_2018"]),
+			weekdayTestFixtures["May_17_2018"],
+			FromGregorianUnchecked(weekdayTestFixtures["May_17_2018"]),
 			Tuesday,
 		},
 		{
 			"less than 7",
-			fixtures["May_19_2018"],
-			FromGregorianUnchecked(fixtures["May_19_2018"]),
+			weekdayTestFixtures["May_19_2018"],
+			FromGregorianUnchecked(weekdayTestFixtures["May_19_2018"]),
 			Tuesday,
 		},
 		{
 			"less than 7",
-			fixtures["June_15_2018"],
-			FromGregorianUnchecked(fixtures["June_15_2018"]),
+			weekdayTestFixtures["June_15_2018"],
+			FromGregorianUnchecked(weekdayTestFixtures["June_15_2018"]),
 			Friday,
 		},
 		{
 			"more than 7",
-			fixtures["May_26_2018"],
-			FromGregorianUnchecked(fixtures["May_26_2018"]),
+			weekdayTestFixtures["May_26_2018"],
+			FromGregorianUnchecked(weekdayTestFixtures["May_26_2018"]),
 			Tuesday,
 		},
 	}

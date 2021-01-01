@@ -14,7 +14,7 @@ import (
 const version = "v1.1.0"
 
 // Cheap testing.
-var writer io.Writer = os.Stdout
+var globalWriter io.Writer = os.Stdout
 
 func main() {
 	runCli()
@@ -57,7 +57,7 @@ func bootstrapCli() *cli.App {
 				Name:    "date",
 				Aliases: []string{"d"},
 				Usage:   "Show today's date",
-				Action:  nc.showDate(writer, time.Now()),
+				Action:  nc.showDate(globalWriter, time.Now()),
 			},
 			{
 				Name:  "conv",
