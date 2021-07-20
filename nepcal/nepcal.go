@@ -7,14 +7,14 @@
 //
 // Anywhere a Gregorian date is expected, the standard `time.Time` struct
 // is required. To avoid confusion, anywhere the func names, comments etc.
-// do *not* explicitly mention "gregorian", it refers to the B.S. names. For
-// example, the `IsInRangeYear` function is for B.S. dates whereas IsInRangeGregorian
-// is explicitly for Gregorian dates.
+// do _not_ explicitly mention "gregorian", it refers to the B.S. values.
+// For example, the `IsInRangeYear` function is for B.S. dates whereas
+// IsInRangeGregorian is explicitly for Gregorian dates.
 //
-// This package only works for a range of dates. Functions are provided to test for this.
-// Check the documentation for the specific functions or methods to know what
-// invariants may need to be upheld for functionality to work correctly. In general,
-// this is only relevant when *constructing* the dates.
+// This package only works for a fixed range of dates, which can be checked using the
+// IsInRangeBS or IsInRangeGregorian methods. As an invariant, various methods will
+// require that the dates they work with to be within this range.
+// In general, this is only relevant when _constructing_ the dates.
 package nepcal
 
 import (
@@ -29,8 +29,8 @@ import (
 var ErrOutOfBounds = errors.New("Provided date out of bounds; consult function/method documentation")
 
 // A Time struct represents a single Bikram Sambat date. An instance of this struct is
-//the primary way to interact with most functionality.
-// It can be created in two general ways:
+// the primary way to interact with most functionality.
+// It can be created in two ways:
 //	 1. If you have a Gregorian date, and want a B.S. date, use the "FromGregorian" method.
 //	 2. If you have B.S. date, and want to access additional functionality on it, or convert it to
 //		Gregorian, then use the "Date" method.
@@ -52,13 +52,14 @@ type raw struct {
 }
 
 // Now returns the nepcal.Time struct corresponding to the current time.
-// This is guaranteed not to fail for now, but will panic after 2044 AD/2100BS
+// This method uses FromGregorianUnchecked - read the documentation
+// for that method to understand limitations.
 func Now() Time {
 	return FromGregorianUnchecked(time.Now())
 }
 
-// CalendarNow flushes the calendar representation of the current date into the
-// input writer.  This is guaranteed not to fail for now, but will panic after 2044 AD/2100BS
+// CalendarNow returns a Reader that returns a formatted calendar representation of the current date.
+// This method uses FromGregorianUnchecked - read the documentation for that method to understand limitations.
 func CalendarNow() io.Reader {
 	t := Now()
 
@@ -77,14 +78,14 @@ func FromGregorian(t time.Time) (Time, error) {
 }
 
 // FromGregorianUnchecked performs the same function as FromGregorianDate
-// but without the additional bounds check. If you are *absolutely* sure that your gregorian date will
-// be within the supported date range, then you can use this unchecked constructor.
+// minus any bounds checking using the IsInRangeGregorian function.
+// If you are _absolutely_ sure that your gregorian date will is within
+// the supported date range of this package, then you can use this unchecked constructor.
 //
-// If you violate this invariant, the correctness of other parameters after conversion
-// such as year, month, days etc. for BS dates is undefined.
+// If you violate this invariant, the correctness of other methods that use the returned value is undefined.
 //
-// An example of where this is useful is when you are constructing from today's date (provided this isn't B.S. bsUBoundY + 1).
-// For all times 't' such that IsInRangeGregorian(t) == true, this function is safe to use.
+// In summary - for all times 't' such that IsInRangeGregorian(t) == true, this function is safe to use.
+// An example of where this is useful is when you are constructing from today's date.
 func FromGregorianUnchecked(t time.Time) Time {
 	return fromGregorian(t)
 }
@@ -101,16 +102,16 @@ func Date(year int, month Month, day int) (Time, error) {
 	return fromRaw(inraw), nil
 }
 
-// DateUnchecked is the unchecked range variant of Date similar to FromGregorianUnchecked. The
+// DateUnchecked is the unchecked range variant of 'Date' similar to FromGregorianUnchecked. The
 // same invariants apply - if the date is not in the valid range as indicated by IsInRangeBS,
-// then the correctness of any derived parameters is undefined.
+// then the correctness of using the returned value is undefined.
 func DateUnchecked(year int, month Month, day int) Time {
 	inraw := raw{year, month, day}
 
 	return fromRaw(inraw)
 }
 
-// Gregorian returns the A.D. equivalent of this date. If this struct was initially creaated
+// Gregorian returns the A.D. equivalent of this date. If this struct was initially created
 // from a gregorian date, then it returns the same input date. Otherwise, if it was created from a raw
 // B.S. date using the "Date" method, then it returns the A.D. representation of that date.
 // Note that the "Date" method already does the conversion during creation, so this method
@@ -119,8 +120,8 @@ func (t Time) Gregorian() time.Time {
 	return t.in
 }
 
-// Date returns the yy, mm, dd values represented by the Time. To get only year,
-// month or day values, use the respective 'Year', 'Month' or 'Day' methods.
+// Date returns the yy, mm, dd values represented by the Time. To get individual values, use the
+// respective 'Year', 'Month' or 'Day' methods.
 func (t Time) Date() (int, Month, int) {
 	return t.Year(), t.Month(), t.Day()
 }
@@ -145,7 +146,7 @@ func (t Time) Weekday() Weekday {
 	return Weekday(t.in.Weekday())
 }
 
-// StartWeekday returns the Weekday at which this particular month starts on.
+// StartWeekday returns the Weekday at which this date's month starts on.
 func (t Time) StartWeekday() Weekday {
 	dayDiff := (t.day % 7) - 1
 	adWithoutbsDiffDays := t.in.AddDate(0, 0, -dayDiff)
