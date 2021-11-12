@@ -6,16 +6,17 @@ builds:
       - linux
     goarch:
       - amd64
+      - arm64
     main: ./cmd/nepcal
 
-archive:
-  format: tar.gz
+archives:
+  - format: tar.gz
 
-brew:
-  name: nepcal
-  github:
-    owner: srishanbhattarai
-    name: nepcal
-  folder: Formula
-  homepage: https://github.com/nepcal/nepcal
-  description: Equivalent of Linux's cal, for Nepali dates
+brews:
+  - name: nepcal
+    tap:
+      owner: srishanbhattarai
+      name: nepcal
+    folder: Formula
+    homepage: https://github.com/nepcal/nepcal
+    description: Equivalent of Linux's cal, for Nepali dates
