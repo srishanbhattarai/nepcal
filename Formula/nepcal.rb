@@ -3,7 +3,6 @@ class Nepcal < Formula
   desc "Equivalent of Linux's cal, for Nepali dates"
   homepage "https://github.com/nepcal/nepcal"
   version "1.2.0"
-  bottle :unneeded
 
   if OS.mac?
     url "https://github.com/srishanbhattarai/nepcal/releases/download/v1.2.0/nepcal_1.2.0_darwin_amd64.tar.gz"
