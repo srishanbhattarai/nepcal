@@ -2,16 +2,20 @@
 class Nepcal < Formula
   desc "Equivalent of Linux's cal, for Nepali dates"
   homepage "https://github.com/nepcal/nepcal"
-  version "1.2.0"
+  version "1.2.1"
+  bottle :unneeded
 
   if OS.mac?
-    url "https://github.com/srishanbhattarai/nepcal/releases/download/v1.2.0/nepcal_1.2.0_darwin_amd64.tar.gz"
-    sha256 "fdd159bf011f54b0a19654c626d6b5c62c6d1d7880dbbbd2c6c535116e56cb3d"
-  elsif OS.linux?
-    if Hardware::CPU.intel?
-      url "https://github.com/srishanbhattarai/nepcal/releases/download/v1.2.0/nepcal_1.2.0_linux_amd64.tar.gz"
-      sha256 "5c65b435425110a450002f56ee337ff2a98060592365b5000fa9343f0a5be3a3"
-    end
+    url "https://github.com/srishanbhattarai/nepcal/releases/download/v1.2.1/nepcal_1.2.1_darwin_amd64.tar.gz"
+    sha256 "06aa22732643c232bcced59879d6a6be79d303118e5ac4be222fc2124edfc580"
+  end
+  if OS.linux? && Hardware::CPU.intel?
+    url "https://github.com/srishanbhattarai/nepcal/releases/download/v1.2.1/nepcal_1.2.1_linux_amd64.tar.gz"
+    sha256 "c2461b58593a69b70b7346995b733ac47a62b07743296099cef88ca71330bb10"
+  end
+  if OS.linux? && Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
+    url "https://github.com/srishanbhattarai/nepcal/releases/download/v1.2.1/nepcal_1.2.1_linux_arm64.tar.gz"
+    sha256 "7c375fef75cc8fb09ae24f18644b366ebb0540a23f214db9894ffc292f0a1308"
   end
 
   def install
