@@ -7,15 +7,15 @@ class Nepcal < Formula
 
   if OS.mac?
     url "https://github.com/srishanbhattarai/nepcal/releases/download/v1.2.1/nepcal_1.2.1_darwin_amd64.tar.gz"
-    sha256 "06aa22732643c232bcced59879d6a6be79d303118e5ac4be222fc2124edfc580"
+    sha256 "4d2652b638bc1df227cb423115caab38a2a002271f6f186be815fd331ac7003b"
   end
   if OS.linux? && Hardware::CPU.intel?
     url "https://github.com/srishanbhattarai/nepcal/releases/download/v1.2.1/nepcal_1.2.1_linux_amd64.tar.gz"
-    sha256 "c2461b58593a69b70b7346995b733ac47a62b07743296099cef88ca71330bb10"
+    sha256 "9256e8c4ad393690f9e64491ce0324896f528ee9b6c047f0aa9c38ed89562ae3"
   end
   if OS.linux? && Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
     url "https://github.com/srishanbhattarai/nepcal/releases/download/v1.2.1/nepcal_1.2.1_linux_arm64.tar.gz"
-    sha256 "7c375fef75cc8fb09ae24f18644b366ebb0540a23f214db9894ffc292f0a1308"
+    sha256 "ac8df6315dae13a4ae0ac2fe9370d6887df63126e963833437a447b82e41add3"
   end
 
   def install
