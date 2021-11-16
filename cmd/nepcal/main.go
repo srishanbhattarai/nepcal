@@ -38,8 +38,8 @@ func bootstrapCli() *cli.App {
 		Name:            "nepcal",
 		Version:         version,
 		Usage:           "Calendar and conversion utilities for Nepali dates",
-		HideVersion:     true,
-		HideHelpCommand: true,
+		HideVersion:     false,
+		HideHelpCommand: false,
 		Action:          nc.showCalendar,
 		Authors: []*cli.Author{
 			{
