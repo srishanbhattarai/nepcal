@@ -11,7 +11,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-const version = "v1.1.0"
+const version = "v1.3.0"
 
 // Cheap testing.
 var globalWriter io.Writer = os.Stdout
