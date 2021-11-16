@@ -17,6 +17,7 @@ vendor/
 # Binaries
 bin/
 dist/
+nepcal
 
 # Project specific files
 cmd/cross/reference.json
