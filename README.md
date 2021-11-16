@@ -23,9 +23,9 @@ Nepcal is a command line tool and a library that provides several functionalitie
 
 The `nepcal` CLI was initially inspired from the `cal` command on Linux, but expanded to have much more functionality, namely:
 
-* [x] Show the current Nepali month's calendar (Similar to `cal`)
-* [x] Show today's Nepali date and day
-* [x] Convert A.D. (gregorian) dates to B.S. dates and vice-versa.
+* Show the current Nepali month's calendar (Similar to `cal`)
+* Show today's Nepali date and day
+* Convert A.D. (gregorian) dates to B.S. dates and vice-versa.
 
 ## Installation
 
@@ -66,12 +66,12 @@ $ go get -v github.com/srishanbhattarai/nepcal/cmd/nepcal
 
 ## Usage
 
-Complete details can be found by running `nepcal` without any arguments.
+Complete details can be found by running `nepcal help` without any arguments.
 
 ### Monthly Calendar
 
 ```sh
-$ nepcal cal # or nepcal c
+$ nepcal # or nepcal cal
     चैत ११, २०७६
  Su Mo Tu We Th Fr Sa
                    १
