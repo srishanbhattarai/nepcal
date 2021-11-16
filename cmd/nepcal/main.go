@@ -40,6 +40,7 @@ func bootstrapCli() *cli.App {
 		Usage:           "Calendar and conversion utilities for Nepali dates",
 		HideVersion:     true,
 		HideHelpCommand: true,
+		Action:          nc.showCalendar,
 		Authors: []*cli.Author{
 			{
 				Name:  "Srishan Bhattarai",
