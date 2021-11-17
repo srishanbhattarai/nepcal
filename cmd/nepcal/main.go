@@ -41,6 +41,10 @@ func bootstrapCli() *cli.App {
 		HideVersion:     false,
 		HideHelpCommand: false,
 		Action:          nc.showCalendar,
+		CommandNotFound: func(c *cli.Context, command string) {
+			fmt.Printf("No matching sub command: %s\n\n", command)
+			cli.ShowAppHelpAndExit(c, 1)
+		},
 		Authors: []*cli.Author{
 			{
 				Name:  "Srishan Bhattarai",
