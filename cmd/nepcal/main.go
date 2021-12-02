@@ -11,7 +11,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-const version = "v1.1.0"
+const version = "v1.3.0"
 
 // Cheap testing.
 var globalWriter io.Writer = os.Stdout
@@ -38,8 +38,13 @@ func bootstrapCli() *cli.App {
 		Name:            "nepcal",
 		Version:         version,
 		Usage:           "Calendar and conversion utilities for Nepali dates",
-		HideVersion:     true,
-		HideHelpCommand: true,
+		HideVersion:     false,
+		HideHelpCommand: false,
+		Action:          nc.showCalendar,
+		CommandNotFound: func(c *cli.Context, command string) {
+			fmt.Printf("No matching sub command: %s\n\n", command)
+			cli.ShowAppHelpAndExit(c, 1)
+		},
 		Authors: []*cli.Author{
 			{
 				Name:  "Srishan Bhattarai",

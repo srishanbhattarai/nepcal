@@ -44,7 +44,7 @@ func (nepcalCli) convADToBS(c *cli.Context) error {
 	if !validateArgs(c) {
 		fmt.Fprintln(os.Stderr, "Please supply a valid date in the format mm-dd-yyyy. Example: `nepcal conv tobs 08-21-1994`")
 
-		return cli.NewExitError("", 1)
+		return cli.Exit("", 1)
 	}
 
 	mm, dd, yy, _ := parseRawDate(c.Args().First())
@@ -54,7 +54,7 @@ func (nepcalCli) convADToBS(c *cli.Context) error {
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Please supply a date after 04/14/1943.")
 
-		return cli.NewExitError("", 1)
+		return cli.Exit("", 1)
 	}
 
 	fmt.Fprintln(globalWriter, bs.String())
@@ -67,7 +67,7 @@ func (nepcalCli) convBSToAD(c *cli.Context) error {
 	if !validateArgs(c) {
 		fmt.Fprintln(os.Stderr, "Please supply a valid date in the format mm-dd-yyyy. Example: `nepcal conv toad 08-18-2053`")
 
-		return cli.NewExitError("", 1)
+		return cli.Exit("", 1)
 	}
 
 	mm, dd, yy, _ := parseRawDate(c.Args().First())
@@ -76,7 +76,7 @@ func (nepcalCli) convBSToAD(c *cli.Context) error {
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Please ensure the date is between 1/1/2000 and 12/30/2095")
 
-		return cli.NewExitError("", 1)
+		return cli.Exit("", 1)
 	}
 
 	printGregorian(globalWriter, d.Gregorian())

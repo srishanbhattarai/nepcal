@@ -4,28 +4,28 @@ Nepcal is a command line tool and a library that provides several functionalitie
 
 ## Table of Contents
 
-* [Command Line](#command-line)
-* [Installation](#installation)
-  * [Pre-built binaries](#pre-built-binaries)
-  * [Homebrew on Mac](#homebrew-on-mac)
-  * [Using go get](#using-go-get)
-* [Usage](#usage)
-  * [Monthly Calendar](#monthly-calendar)
-  * [Today's date and day](#todays-date-and-day)
-  * [Convert an A.D. date to B.S.](#convert-an-ad-date-to-bs)
-  * [Convert a B.S. date to A.D.](#convert-a-bs-date-to-ad)
-* [Library/Programmatic usage](#library)
-* [Acknowledgements](#acknowledgements)
-* [Contributing](#contributing)
-* [License](#license)
+- [Command Line](#command-line)
+- [Installation](#installation)
+  - [Pre-built binaries](#pre-built-binaries)
+  - [Homebrew on Mac](#homebrew-on-mac)
+  - [Using go get](#using-go-get)
+- [Usage](#usage)
+  - [Monthly Calendar](#monthly-calendar)
+  - [Today's date and day](#todays-date-and-day)
+  - [Convert an A.D. date to B.S.](#convert-an-ad-date-to-bs)
+  - [Convert a B.S. date to A.D.](#convert-a-bs-date-to-ad)
+- [Library/Programmatic usage](#library)
+- [Acknowledgements](#acknowledgements)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Command Line
 
 The `nepcal` CLI was initially inspired from the `cal` command on Linux, but expanded to have much more functionality, namely:
 
-* [x] Show the current Nepali month's calendar (Similar to `cal`)
-* [x] Show today's Nepali date and day
-* [x] Convert A.D. (gregorian) dates to B.S. dates and vice-versa.
+- Show the current Nepali month's calendar (Similar to `cal`)
+- Show today's Nepali date and day
+- Convert A.D. (gregorian) dates to B.S. dates and vice-versa.
 
 ## Installation
 
@@ -66,12 +66,12 @@ $ go get -v github.com/srishanbhattarai/nepcal/cmd/nepcal
 
 ## Usage
 
-Complete details can be found by running `nepcal` without any arguments.
+Complete details can be found by running `nepcal help`.
 
 ### Monthly Calendar
 
 ```sh
-$ nepcal cal # or nepcal c
+$ nepcal # or nepcal cal
     चैत ११, २०७६
  Su Mo Tu We Th Fr Sa
                    १
