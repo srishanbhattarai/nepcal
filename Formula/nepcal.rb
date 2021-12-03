@@ -5,20 +5,20 @@
 class Nepcal < Formula
   desc "Equivalent of Linux's cal, for Nepali dates"
   homepage "https://github.com/nepcal/nepcal"
-  version "1.2.1"
+  version "1.3.0"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/srishanbhattarai/nepcal/releases/download/v1.2.1/nepcal_1.2.1_darwin_arm64.tar.gz"
-      sha256 "2c7a1e8720e349172692265fcc93694af111a572a26bf7abdd15760839526938"
+      url "https://github.com/srishanbhattarai/nepcal/releases/download/v1.3.0/nepcal_1.3.0_darwin_arm64.tar.gz"
+      sha256 "97f30a78cbe227effbc53e52d99bb1b8fa09c054f4b33dfb2bd7be044d6b9bf3"
 
       def install
         bin.install "nepcal"
       end
     end
     if Hardware::CPU.intel?
-      url "https://github.com/srishanbhattarai/nepcal/releases/download/v1.2.1/nepcal_1.2.1_darwin_amd64.tar.gz"
-      sha256 "d37e789ca3c60007b0624a1d33194e4160ed7fc73a0979f24704c01d6f892f99"
+      url "https://github.com/srishanbhattarai/nepcal/releases/download/v1.3.0/nepcal_1.3.0_darwin_amd64.tar.gz"
+      sha256 "461b94be6acf69cfbbcea1007c32430cbcebe97230999090afb37157f6a4826e"
 
       def install
         bin.install "nepcal"
@@ -28,16 +28,16 @@ class Nepcal < Formula
 
   on_linux do
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/srishanbhattarai/nepcal/releases/download/v1.2.1/nepcal_1.2.1_linux_arm64.tar.gz"
-      sha256 "fe5d80b5915832bca9d7a1e008b79bd8c4bf0d575de1e9b9a36b92c2bd83eb0d"
+      url "https://github.com/srishanbhattarai/nepcal/releases/download/v1.3.0/nepcal_1.3.0_linux_arm64.tar.gz"
+      sha256 "a0ce2c92861dbfe4902095b820e8a137ca00a5ef266cc10775972de017e18eca"
 
       def install
         bin.install "nepcal"
       end
     end
     if Hardware::CPU.intel?
-      url "https://github.com/srishanbhattarai/nepcal/releases/download/v1.2.1/nepcal_1.2.1_linux_amd64.tar.gz"
-      sha256 "287173f752eeb0fded3b5c3ea5e390abc3a03d1e59fe685cb6e681656b269962"
+      url "https://github.com/srishanbhattarai/nepcal/releases/download/v1.3.0/nepcal_1.3.0_linux_amd64.tar.gz"
+      sha256 "d3e3c308b2911bfa9793110c1d77431d862d60edb529c3529f74a07c21f15994"
 
       def install
         bin.install "nepcal"
