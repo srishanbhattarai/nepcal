@@ -1,27 +1,37 @@
 package nepcal
 
 import (
-	"fmt"
 	"time"
 )
 
-// IsInRangeGregorian checks if 't' is after 04/14/1943.
+// IsInRangeGregorian checks if 't' is inside Nepcal's supported range of dates.
 func IsInRangeGregorian(t time.Time) bool {
 	adLBound := gregorian(adLBoundY, adLBoundM, adLBoundD)
+	adUBound := gregorian(adUBoundY, adUBoundM, adUBoundD)
 
-	return t.Equal(adLBound) || t.After(adLBound)
+	satisfiesLowerBound := t.Equal(adLBound) || t.After(adLBound)
+	satisfiesUpperBound := t.Equal(adUBound) || t.Before(adUBound)
+
+	return satisfiesLowerBound && satisfiesUpperBound
 }
 
 // IsInRangeBS checks if the provided date represents a B.S. that
 // we have data for and can be supported for conversions to/from A.D.
 func IsInRangeBS(year int, month Month, day int) bool {
+	if month < Baisakh || month > Chaitra {
+		return false
+	}
+
+	t := (raw{year, month, day}).String()
+
 	// Lower bound raw date.
 	bslow := raw{bsLBoundY, bsLBoundM, bsLBoundD}
+	bshigh := raw{bsUBoundY, bsUBoundM, bsUBoundD}
 
-	// Input raw date.
-	inraw := raw{year, month, day}
+	satisfiesLowerBound := t >= bslow.String()
+	satisfiesUpperBound := t <= bshigh.String()
 
-	return after(inraw, bslow)
+	return satisfiesLowerBound && satisfiesUpperBound
 }
 
 // IsInRangeYear return true if the provided bsYear is within the supported
@@ -47,14 +57,4 @@ func numDaysInYear(year int) int {
 	}
 
 	return sum
-}
-
-// Check if 't' is after 'u'.
-func after(t raw, u raw) bool {
-	// Comparing their string representations is an easy way to do this
-	// as we do not deal with sub-day precisions.
-	tstr := fmt.Sprintf("%d-%02d-%02d", t.year, t.month, t.day)
-	ustr := fmt.Sprintf("%d-%02d-%02d", u.year, u.month, u.day)
-
-	return tstr > ustr
 }
