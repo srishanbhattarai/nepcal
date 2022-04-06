@@ -73,11 +73,11 @@ func TestParseRawDate(t *testing.T) {
 		{"underflow month", "00-21-1994", -1, -1, -1, false},
 		{"underflow year", "14-21-199", -1, -1, -1, false},
 		{"overflow year", "14-21-19900", -1, -1, -1, false},
-		{"inconversibe month", "aa-21-1994", -1, -1, -1, false},
-		{"inconversibe day", "08-aa-1994", -1, -1, -1, false},
-		{"inconversibe year", "08-21-xyz", -1, -1, -1, false},
+		{"inconversible month", "aa-21-1994", -1, -1, -1, false},
+		{"inconversible day", "08-aa-1994", -1, -1, -1, false},
+		{"inconversible year", "08-21-xyz", -1, -1, -1, false},
 		{"underflow number of elements", "08-21", -1, -1, -1, false},
-		{"overflwo number of elements", "08-21-1994-01", -1, -1, -1, false},
+		{"overflow number of elements", "08-21-1994-01", -1, -1, -1, false},
 	}
 
 	for _, test := range tests {

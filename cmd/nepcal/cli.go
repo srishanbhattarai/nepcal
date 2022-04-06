@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -52,7 +53,7 @@ func (nepcalCli) convADToBS(c *cli.Context) error {
 	ad := gregorian(yy, mm, dd)
 	bs, err := nepcal.FromGregorian(ad)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Please supply a date after 04/14/1943.")
+		fmt.Fprintln(os.Stderr, "Please ensure the date is between 04-13-1918 and 04-12-2044 A.D.")
 
 		return cli.Exit("", 1)
 	}
@@ -74,7 +75,11 @@ func (nepcalCli) convBSToAD(c *cli.Context) error {
 
 	d, err := nepcal.Date(yy, nepcal.Month(mm), dd)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Please ensure the date is between 1/1/2000 and 12/30/2095")
+		if errors.Is(err, nepcal.ErrOutOfBounds) {
+			fmt.Fprintln(os.Stderr, "Please ensure the date is between 01-01-1975 and 12-30-2100 B.S.")
+		} else {
+			fmt.Fprintf(os.Stderr, "Error: %s\n", err.Error())
+		}
 
 		return cli.Exit("", 1)
 	}
