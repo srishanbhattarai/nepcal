@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strconv"
 	"time"
@@ -39,7 +38,7 @@ func (e DateMapEntry) String() string {
 
 // Get the reference entries, properly serialized, and sliced for only the range for which we support.
 func getRefEntries(refEntriesFile string) ([]DateMapEntry, error) {
-	b, err := ioutil.ReadFile(refEntriesFile)
+	b, err := os.ReadFile(refEntriesFile)
 	if err != nil {
 		return nil, err
 	}
