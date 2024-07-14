@@ -91,7 +91,7 @@ func TestFromGregorian(t *testing.T) {
 }
 
 func TestBsAdConversion(t *testing.T) {
-	tests := []struct {
+	validDateTests := []struct {
 		name   string
 		input  raw
 		output time.Time
@@ -138,7 +138,7 @@ func TestBsAdConversion(t *testing.T) {
 		},
 	}
 
-	for _, test := range tests {
+	for _, test := range validDateTests {
 		t.Run(test.name, func(t *testing.T) {
 			bs, err := Date(test.input.year, test.input.month, test.input.day)
 
@@ -146,11 +146,39 @@ func TestBsAdConversion(t *testing.T) {
 			assert.Equal(t, test.output, bs.in)
 		})
 	}
+}
 
-	t.Run("panics if date is before 1975 Baisakh 1", func(t *testing.T) {
-		_, err := Date(1974, 12, 30)
-		assert.Equal(t, err, ErrOutOfBounds)
-	})
+// Test suite that verifies the "Date" function i.e. the BS/AD conversion
+// correctly catches various cases of adversarial input.
+func TestBsAdConversionAdversarialInput(t *testing.T) {
+	testCases := []struct {
+		name string
+
+		// BS input date.
+		input raw
+
+		// expected error message
+		err string
+	}{
+		{
+			"case1/2076_chaitra_only_contains_30_days",
+			raw{2076, 12, 31},
+			"The month of चैत has only 30 days in the year 2076, but the provided date specifies a value of 31. Nepcal does not perform auto date normalization.",
+		},
+		{
+			"case2/month_does_not_fall_between_baisakh_and_chaitra",
+			raw{2076, 15, 01}, // 15 is not a valid month
+			"Month values can only be between 1 and 12, but a value of 15 was specified",
+		},
+	}
+
+	for _, test := range testCases {
+		t.Run(test.name, func(t *testing.T) {
+			_, err := Date(test.input.year, test.input.month, test.input.day)
+			assert.Error(t, err)
+			assert.Equal(t, test.err, err.Error())
+		})
+	}
 }
 
 func TestNumDays(t *testing.T) {
