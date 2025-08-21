@@ -51,6 +51,12 @@ type raw struct {
 	day   int
 }
 
+// String satisfies the stringer interface for 'raw'. The string format returned
+// is intended to be used to establish order between dates.
+func (r raw) String() string {
+	return fmt.Sprintf("%d-%02d-%02d", r.year, r.month, r.day)
+}
+
 // Now returns the nepcal.Time struct corresponding to the current time.
 // This method uses FromGregorianUnchecked - read the documentation
 // for that method to understand limitations.
@@ -93,9 +99,24 @@ func FromGregorianUnchecked(t time.Time) Time {
 // Date constructs a B.S. date using raw parts "year, month, date". As with the,
 // "From_" constructors, the specified B.S date must be in the supported range as
 // specified by the IsInRangeBS function.
+//
+// Unlike Go's time package, Nepcal does not auto normalize dates, therefore if a date was passed in that
+// would have wrapped over, an error is returned.
 func Date(year int, month Month, day int) (Time, error) {
+	if month < Baisakh || month > Chaitra {
+		return Time{}, fmt.Errorf("Month values can only be between 1 and 12, but a value of %d was specified", int(month))
+	}
+
 	if !IsInRangeBS(year, month, day) {
 		return Time{}, ErrOutOfBounds
+	}
+
+	// Check that the provided day actually exists in the month. While Go's time package
+	// performs auto date normalization (i.e. February 30 is normalized to April 2nd),
+	// Nepcal does not do this, since this is most likely a user error.
+	daysInMonth := bsDaysInMonthsByYear[year][int(month)-1]
+	if day > daysInMonth {
+		return Time{}, fmt.Errorf(fmt.Sprintf("The month of %s has only %d days in the year %d, but the provided date specifies a value of %d. Nepcal does not perform auto date normalization.", month, daysInMonth, year, day))
 	}
 
 	inraw := raw{year, month, day}
@@ -193,7 +214,7 @@ func (t Time) Calendar() io.Reader {
 
 // After reports whether the Time t, is after u.
 func (t Time) After(u Time) bool {
-	return after(t.toRaw(), u.toRaw())
+	return t.toRaw().String() > u.toRaw().String()
 }
 
 // String satisfies the stringer interface.
