@@ -4,9 +4,9 @@ environment:
   GOPATH: c:\gopath
 
 install:
+  - set PATH=C:\go121\bin;%PATH%
   - echo %PATH%
   - echo %GOPATH%
-  - set PATH=%GOPATH%\bin;c:\go\bin;%PATH%
   - go version
   - go env
   - go get -t -v ./...
